@@ -4,6 +4,10 @@ import com.example.envoisrecois.outils.RecupConfig;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import java.util.Properties;
+
+/**
+ * Permet de recuperer les emails
+ */
 public class Recevoir {
     public static void main(String[] args) {
         final String username = RecupConfig.getUsername();
