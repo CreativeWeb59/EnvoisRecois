@@ -38,4 +38,4 @@ build/
 .DS_Store
 
 ### Properties
-!**/src/main/resources/config*
+!src/main/resources/config.properties
