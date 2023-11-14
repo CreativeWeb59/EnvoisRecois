@@ -7,7 +7,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
-
+/**
+ * Permet d'envoyer les messages
+ */
 public class Envoyer {
     public static void main(String[] args) {
         final String username = RecupConfig.getUsername();
