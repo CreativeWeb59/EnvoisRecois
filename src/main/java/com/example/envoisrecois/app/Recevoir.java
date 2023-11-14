@@ -10,7 +10,7 @@ import java.util.Properties;
  */
 public class Recevoir {
     public static void main(String[] args) {
-        final String username = RecupConfig.getUsername();
+        final String username = RecupConfig.getUserEmail();
         final String password = RecupConfig.getPassword();
 
         Properties props = new Properties();

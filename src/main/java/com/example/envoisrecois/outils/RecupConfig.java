@@ -13,8 +13,8 @@ public class RecupConfig {
         }
     }
 
-    public static String getUsername() {
-        return properties.getProperty("username");
+    public static String getUserEmail() {
+        return properties.getProperty("userEmail");
     }
 
     public static String getPassword() {

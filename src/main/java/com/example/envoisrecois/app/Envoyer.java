@@ -1,6 +1,7 @@
 package com.example.envoisrecois.app;
 
 import com.example.envoisrecois.outils.RecupConfig;
+import javafx.scene.control.Label;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -11,10 +12,7 @@ import java.util.Properties;
  * Permet d'envoyer les messages
  */
 public class Envoyer {
-    public static void main(String[] args) {
-        final String username = RecupConfig.getUsername();
-        final String password = RecupConfig.getPassword();
-
+    public static void envoyerMessage(String receiver, String subject, String contenuMessage) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -23,23 +21,26 @@ public class Envoyer {
 
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(RecupConfig.getUserEmail(), RecupConfig.getPassword());
             }
         });
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("delphine.laiglesia@free.fr"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("delcri@free.fr"));
-            message.setSubject("Message 2");
-            message.setText("Coucou à moi du message 2");
+            message.setFrom(new InternetAddress(RecupConfig.getUserEmail()));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
+            message.setSubject(subject);
+//            message.setText(contenuMessage);
+
+            // Utilisation de setContent avec le type "text/html" pour spécifier un e-mail au format HTML
+            message.setContent(contenuMessage, "text/html; charset=utf-8");
 
             Transport.send(message);
 
             System.out.println("E-mail envoyé avec succès!");
-
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }
+
 }
