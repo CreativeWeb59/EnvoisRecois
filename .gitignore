@@ -39,3 +39,5 @@ build/
 
 ### Properties
 !src/main/resources/config.properties
+src/main/resources/config.properties
+/src/main/resources/config.properties
