@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@css/main.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.MainController">
+      <children>
+      <Pane fx:id="paneDossiers" layoutY="97.0" prefHeight="503.0" prefWidth="200.0" style="-fx-background-color: gray;" />
+      <Pane fx:id="paneListeMessages" layoutX="200.0" layoutY="99.0" prefHeight="183.0" prefWidth="600.0" style="-fx-background-color: lightblue;" visible="true">
+         <children>
+                <Label fx:id="welcomeText" layoutX="42.0" layoutY="26.0" prefHeight="41.0" prefWidth="515.0" />
+                <Button layoutX="276.0" layoutY="79.0" onAction="#onHelloButtonClick" text="Hello!" />
+      
+                <Button layoutX="272.0" layoutY="127.0" onAction="#onQuit" text="Quitter!" />
+         </children>
+      </Pane>
+      <Pane fx:id="paneDetailsMessages" layoutX="201.0" layoutY="284.0" prefHeight="316.0" prefWidth="593.0" style="-fx-background-color: lightgreen;" visible="true" />
+      <Pane fx:id="paneMenu" prefHeight="100.0" prefWidth="800.0" style="-fx-background-color: lightgreen;">
+         <children>
+            <MenuBar prefHeight="25.0" prefWidth="800.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Fichier">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="Nouveau Message" />
+                        <MenuItem mnemonicParsing="false" text="Actualiser" />
+                    <MenuItem mnemonicParsing="false" onAction="#onQuit" text="Quitter" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Contacts">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Liste des contacts" />
+                  </items>
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Nouveau contact" />
+                    </items>
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Supprimer contact" />
+                    </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Paramètres">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Aide">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="A propos" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Button layoutX="2.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Actualiser" />
+            <Button layoutX="140.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Nouveau" />
+             <Button layoutX="280.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Contacts" />
+             <Button layoutX="420.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Paramètres" />
+             <Button layoutX="560.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Quitter" />
+         </children>
+      </Pane>
+      </children>
+</AnchorPane>

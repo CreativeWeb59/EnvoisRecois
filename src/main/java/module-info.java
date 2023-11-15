@@ -6,4 +6,6 @@ module com.example.envoisrecois {
 
     opens com.example.envoisrecois to javafx.fxml;
     exports com.example.envoisrecois;
+    exports com.example.envoisrecois.controllersFx;
+    opens com.example.envoisrecois.controllersFx to javafx.fxml;
 }
