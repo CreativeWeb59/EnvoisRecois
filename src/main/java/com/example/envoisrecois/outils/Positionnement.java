@@ -33,7 +33,20 @@ public class Positionnement {
 
         return resultat;
     }
+    /**
+     * renvoi la largeur, hauteur
+     * le layoutx et layoutY du pane Liste messages
+     */
+    public static double[] paneCentral(){
+        // valeurs par defaut
+        double width = (Environment.getWidth() / 4 * 3) - 20;
+        double height = (Environment.getHeight() * 0.85);
+        double layoutX = (Environment.getWidth() / 4) + 10;
+        double layoutY = Environment.getHeight() * 0.14;
+        double resultat[] = {width, height, layoutX, layoutY};
 
+        return resultat;
+    }
     /**
      * renvoi la largeur, hauteur
      * le layoutx et layoutY du pane Liste messages
@@ -42,8 +55,8 @@ public class Positionnement {
         // valeurs par defaut
         double width = (Environment.getWidth() / 4 * 3) - 20;
         double height = (Environment.getHeight() * 0.85 / 2) - 5;
-        double layoutX = (Environment.getWidth() / 4) + 10;
-        double layoutY = Environment.getHeight() * 0.14;
+        double layoutX = 0;
+        double layoutY = 0;
         double resultat[] = {width, height, layoutX, layoutY};
 
         return resultat;
@@ -57,10 +70,29 @@ public class Positionnement {
         // valeurs par defaut
         double width = (Environment.getWidth() / 4 * 3) - 20;
         double height = (Environment.getHeight() * 0.85 / 2);
-        double layoutX = (Environment.getWidth() / 4) + 10;
-        double layoutY = (Environment.getHeight() * 0.14) + (Environment.getHeight() * 0.85 / 2);
+        double layoutX =  0;
+        double layoutY = 0;
         double resultat[] = {width, height, layoutX, layoutY};
 
         return resultat;
+    }
+
+    /**
+     * Permet de donner la position le layoutX pour centrer un element
+     * @param width
+     * @param widthParent
+     * @return layoutX
+     */
+    public static double centrerX(double width, double widthParent){
+        return (widthParent/2) - (width/2);
+    }
+    /**
+     * Permet de donner la position le layoutX pour centrer un element
+     * @param height
+     * @param heightParent
+     * @return layoutY
+     */
+    public static double centrerY(double height, double heightParent){
+        return (heightParent/2) - (height/2);
     }
 }
