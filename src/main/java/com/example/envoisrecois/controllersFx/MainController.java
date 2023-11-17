@@ -1,24 +1,32 @@
 package com.example.envoisrecois.controllersFx;
 
 import com.example.envoisrecois.app.Envoyer;
+import com.example.envoisrecois.bdd.ConnectionBdd;
+import com.example.envoisrecois.bdd.UtilisateursService;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Positionnement;
+import com.example.envoisrecois.outils.Securite;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.HTMLEditor;
+
+import java.sql.SQLException;
 
 public class MainController {
     @FXML
     private Label welcomeText;
     @FXML
     private Pane paneMenu, paneNouveauMessage,
-            paneBoiteReception, paneEnvoyes, paneCorbeille, paneSpam, paneCommercial, paneReseauxSociaux, paneBoite1, paneBoite2;
+            paneBoiteReception, paneEnvoyes, paneCorbeille, paneSpam, paneCommercial, paneReseauxSociaux,
+            paneNouveauMessageBtnH, paneNouveauMessageEntete, paneNouveauMessageJoindre;
     @FXML
     private SplitPane paneCentralSplit;
     @FXML
@@ -26,23 +34,46 @@ public class MainController {
     @FXML
     private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
     @FXML
-    private VBox vBoxDossiers;
+    private VBox vBoxDossiers, vboxNouveauMessage;
+    @FXML
+    private HTMLEditor htmlNouveauMessage;
+    @FXML
+    TextField fieldSend, fieldSujet;
 
+    // bdd
+    private ConnectionBdd connectionBdd = new ConnectionBdd();
+    private UtilisateursService utilisateursService;
 
     /**
      * Methode au chargement du controlleur
      */
     public void onLoad(){
+        // redimensionnement des fenetres de base
+        redimFenetres();
+        redimElements();
+        createDossiers();
+        onBoiteReception();
+    }
+    /**
+     * Redimensionne les fenetres de bases
+     * par rapport à l'écran de l'utilisateur
+     */
+    public void redimFenetres(){
         positionnementScrollPane(paneDossiers, anchorDossiers, 1);
         positionnementPaneDossiers(paneMenu, 2);
         positionnementSplitCentral(paneCentralSplit);
         positionnementPaneDossiers(paneNouveauMessage, 3);
         positionnementScrollPane(paneListeMessages, anchorListeMessages, 2);
         positionnementScrollPane(paneDetailsMessages, anchorDetailsMessages, 3);
-//        anchorDossiers.setStyle("-fx-background-color: red;");
-        createDossiers();
     }
 
+    /**
+     * Redimensionne les éléments de l'application
+     * par rapport à la taille de base de leur fenetre
+     */
+    public void redimElements(){
+        redimNouveauMessage();
+    }
     public void positionnementPaneDossiers(Pane pane, int position){
         double caracPaneDossiers[] = {200, 200, 20, 60};
         switch (position){
@@ -80,6 +111,30 @@ public class MainController {
         scrollPane.setLayoutX(caracPaneDossiers[2]); anchorPane.setLayoutX(0);
         scrollPane.setLayoutY(caracPaneDossiers[3]);anchorPane.setLayoutY(0);
     }
+
+    /**
+     * Dimensionne les éléments d'un nouveau message
+     */
+    public void redimNouveauMessage(){
+        // vbox Nouveau message
+        vboxNouveauMessage.setPrefWidth(paneNouveauMessage.getPrefWidth());
+        vboxNouveauMessage.setPrefHeight(paneNouveauMessage.getPrefHeight());
+        // pane des boutons haut
+        paneNouveauMessageBtnH.setPrefWidth(vboxNouveauMessage.getPrefWidth());
+        paneNouveauMessageBtnH.setPrefHeight(vboxNouveauMessage.getPrefHeight()*0.14);
+        paneNouveauMessageBtnH.setStyle("-fx-background-color: lightblue;");
+        // pane de l'entete du message
+        paneNouveauMessageEntete.setPrefWidth(vboxNouveauMessage.getPrefWidth());
+        paneNouveauMessageEntete.setPrefHeight(vboxNouveauMessage.getPrefHeight()*0.1);
+        paneNouveauMessageEntete.setStyle("-fx-background-color: lavender;");
+        // html Editor
+        htmlNouveauMessage.setPrefWidth(vboxNouveauMessage.getPrefWidth());
+        htmlNouveauMessage.setPrefHeight(vboxNouveauMessage.getPrefHeight() * 0.6);
+        // pane des boutons bas
+        paneNouveauMessageJoindre.setPrefWidth(paneNouveauMessageBtnH.getPrefWidth());
+        paneNouveauMessageJoindre.setPrefHeight(vboxNouveauMessage.getPrefHeight()* 0.16);
+        paneNouveauMessageJoindre.setStyle("-fx-background-color: lightgreen;");
+    }
     @FXML
     protected void onHelloButtonClick() {
         String receiver = "delphine.laiglesia@free.fr";
@@ -91,8 +146,22 @@ public class MainController {
                 + "<p>Vous pouvez mettre du texte <em>en italique</em>, changer les <span style='color:blue;'>couleurs</span>, etc.</p>";
 
 
+        System.out.println("Envoi du message");
         Envoyer.envoyerMessage(receiver, subject, corpsHtml);
-        welcomeText.setText("Message envoyé avec succés");
+
+    }
+    @FXML
+    protected void onNouveauMessageClick(){
+        String receiver = this.fieldSend.getText();
+        String subject = this.fieldSujet.getText();
+        String corpsHtml = this.htmlNouveauMessage.getHtmlText();
+
+        if(Securite.validerEmail(fieldSend)){
+        Envoyer.envoyerMessage(receiver, subject, corpsHtml);
+        } else {
+            System.out.println("Erreur de destinataire");
+        }
+
 
     }
     public void createDossiers(){
@@ -174,4 +243,6 @@ public class MainController {
         paneNouveauMessage.setVisible(false);
         paneCentralSplit.setVisible(true);
     }
+
+
 }

@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@css/main.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.MainController">
       <children>
@@ -66,7 +67,7 @@
             <Button layoutX="2.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Actualiser" />
              <Button layoutX="140.0" layoutY="30.0" mnemonicParsing="false" onAction="#onBoiteReception" prefHeight="60.0" prefWidth="130.0" text="Boîte de réception" wrapText="true" />
             <Button layoutX="280.0" layoutY="30.0" mnemonicParsing="false" onAction="#onNouveauMessage" prefHeight="60.0" prefWidth="130.0" text="Nouveau Message" wrapText="true" />
-             <Button layoutX="420.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Contacts" />
+             <Button layoutX="420.0" layoutY="30.0" mnemonicParsing="false" onAction="#onHelloButtonClick" prefHeight="60.0" prefWidth="130.0" text="Contacts" />
              <Button layoutX="560.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Paramètres" />
              <Button layoutX="700.0" layoutY="30.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="60.0" prefWidth="130.0" text="Quitter" />
          </children>
@@ -98,7 +99,31 @@
         </items>
       </SplitPane>
       <Pane fx:id="paneNouveauMessage" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <VBox fx:id="vboxNouveauMessage" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Pane fx:id="paneNouveauMessageBtnH" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="50.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Envoyer le message" />
+                         <Button layoutX="300.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Conserver comme brouillon" />
+                         <Button layoutX="550.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Annuler / Supprimer" />
+                     </children>
+                  </Pane>
+                   <Pane fx:id="paneNouveauMessageEntete" prefHeight="200.0" prefWidth="200.0">
+                       <children>
+                           <Label layoutX="10.0" layoutY="20.0" text="Destinataire" />
+                           <TextField fx:id="fieldSend" layoutX="120.0" layoutY="20.0" />
 
-      </Pane>
+                           <Label layoutX="10.0" layoutY="50.0" minWidth="100.0" text="Sujet du message" />
+                           <TextField fx:id="fieldSujet" layoutX="120.0" layoutY="50.0" />
+                       </children>
+                   </Pane>
+                  <HTMLEditor fx:id="htmlNouveauMessage" htmlText="&lt;html&gt;&lt;head&gt;&lt;style&gt;body {font-family: 'Arial'; font-size: 14pt;}&lt;/style&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" prefHeight="200.0" prefWidth="506.0" />
+                  <Pane fx:id="paneNouveauMessageJoindre" prefHeight="200.0" prefWidth="200.0">
+                   <Button layoutX="50.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Joindre un fichier" />
+                  </Pane>
+               </children>
+            </VBox>
+         </children></Pane>
       </children>
 </AnchorPane>
