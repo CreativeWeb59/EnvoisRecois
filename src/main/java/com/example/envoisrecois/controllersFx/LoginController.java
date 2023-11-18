@@ -4,7 +4,6 @@ import com.example.envoisrecois.Main;
 import com.example.envoisrecois.bdd.ConnectionBdd;
 import com.example.envoisrecois.bdd.Utilisateurs;
 import com.example.envoisrecois.bdd.UtilisateursService;
-import com.example.envoisrecois.outils.Resultat;
 import com.example.envoisrecois.outils.Securite;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -31,7 +30,7 @@ public class LoginController {
     @FXML
     private Pane paneLogin, paneInscription;
     @FXML
-    private TextField fieldUserName, fieldNom, fieldMail, fieldprenom;
+    private TextField fieldUserName, fieldNom, fieldEMail, fieldprenom;
     @FXML
     private PasswordField fielPassword, fielPasswordConfirm;
 
@@ -39,27 +38,32 @@ public class LoginController {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    // variables supplementaires
-    private String username;
     // bdd
     private ConnectionBdd connectionBdd = new ConnectionBdd();
     private Utilisateurs utilisateurs;
     private UtilisateursService utilisateursService;
+    // verification du formulaire
+    private boolean fieldVerifUsername = false;
+    private boolean fieldVerifNom = false;
+    private boolean fieldVerifPrenom = false;
+    private boolean fieldVerifEmail = false;
+    private boolean fieldVerifPassword1 = false;
+    private boolean fieldVerifPassword2 = false;
 
     /**
      * Methode au chargement du controlleur
      */
-    public void onLoad(){
+    public void onLoad() {
         // creation tables si necessaire
         try {
             createDonnees();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         // verifie si un utilisateur existe dans la base
         // si oui affiche le formulaire de login
         // sinon affiche le formulaire de creation utilisateur
-        if(nbUtilisateurs() > 0){
+        if (nbUtilisateurs() > 0) {
             paneLogin.setVisible(true);
             paneInscription.setVisible(false);
         } else {
@@ -67,10 +71,13 @@ public class LoginController {
             paneInscription.setVisible(true);
         }
 
+        // creation de l'instance utilisateur  vide
+        this.utilisateurs = new Utilisateurs("", "", "", "", "", "", 1);
         // verification des champs du formulaire d'inscription
         // avec observable pour vérifier toute modification
         verifFormulaire();
     }
+
     /**
      * Teste si les tables sauvegarde et parametres existent
      * sinon les cree
@@ -86,9 +93,10 @@ public class LoginController {
 
     /**
      * donne le nombre d'utilisateurs dans la table utilisateurs
+     *
      * @return
      */
-    public int nbUtilisateurs(){
+    public int nbUtilisateurs() {
         connectionBdd.connect();
         utilisateursService = new UtilisateursService(connectionBdd);
         int resultat = 0;
@@ -98,83 +106,169 @@ public class LoginController {
     }
 
     /**
-     * Verifie si le userName existe dans la base
+     * Recupere la valeur des champs du formulaire
+     * stocke dans la classe Utilisateurs en mettant en forme les attributs
      */
-    public void verifUserName(Event event){
-        String username = fieldUserName.getText();
-
-        // Serie de tests sur la validité du pseudo : taille, caractères...
-        // renvoi le pseudo modifité (sans espaces...)
-        // permet de recuperer l'erreur
-
-        Resultat resultat = Securite.testTailleChaine(username, 3, 20, false);
-        this.username = resultat.getChaine();
-        // si chaine ok on teste l'existence du pseudo en bdd
-        if (resultat.getValeurBool()) {
-            // teste si le joueur existe en bdd
-            connectionBdd.connect();
-            if (!utilisateursService.existUserName(this.username)) {
-                // cree le joueur en bdd
-                // et cree l'instance joueur
-                this.creerUtilisateur();
-                // ouvre la page de gestion du jeu
-                this.switchApplication(event);
-            } else {
-                // Le joueur existe on bloque le lancement du jeu
-                this.labelErreur.setText("L'utilisateur existe déja");
-                afficherMessageTemporaire(this.labelErreur, "L'utilisateur existe déja !", 3000);
-            }
-            connectionBdd.close();
+    public void creationUtilisateur(){
+        String chaine = "";
+        String chaineATraiter = Securite.miseEnFormePseudo(chaine);
+    }
+    /**
+     * Teste si le username existe en dbb
+     * si non le cree
+     */
+    public void verifUserNameBdd() {
+        connectionBdd.connect();
+        if (!utilisateursService.existUserName(fieldUserName.getText())) {
+            // cree le joueur en bdd
+            this.creerUtilisateur();
         } else {
-            afficherMessageTemporaire(this.labelErreur, resultat.getChaine(), 3000);
+            // Le joueur existe on bloque le lancement du jeu
+            this.labelErreur.setText("L'utilisateur existe déja");
+            afficherMessageTemporaire(this.labelErreur, "L'utilisateur existe déja !", 3000);
+        }
+        connectionBdd.close();
+    }
+
+    /**
+     * Renseigne les boolean fieldVerifUsername...
+     * true / false suivant verification de chaque champ
+     */
+    public void verifFormulaire() {
+        verifTextField(fieldUserName, 3, 20, false, labelErreur, "Probleme de username");
+        verifTextField(fieldNom, 3, 20, false, labelErreur, "Probleme de nom");
+        verifTextField(fieldprenom, 3, 20, true, labelErreur, "Probleme de prénom");
+        verifTextFieldEmail(fieldEMail, labelErreur, "Email non valide");
+        verifPaswords(fielPassword, fielPasswordConfirm,3, 20, false, labelErreur, "Probleme de mot de passe");
+        verifPaswords(fielPasswordConfirm, fielPassword, 3, 20, false, labelErreur, "Probleme de mot de passe");
+    }
+
+    /**
+     * Creation de l'observable qui va ecouter les champs du formulaire
+     * et renvoyer une erreur si c'est le cas
+     *
+     * @param fieldAVerifier nom du TextField à verifier
+     * @param min            nb de caracteres minimum autorisés
+     * @param max            nb de caracteres maximum autorisés
+     * @param accents        prise en charge des accents ou non
+     * @param labelErreur    nom du label à afficher
+     * @param MessageErreur  message qui s'affichera dans le label
+     */
+    public void verifTextField(TextField fieldAVerifier, int min, int max, boolean accents, Label labelErreur, String MessageErreur) {
+        String textFieldName = fieldAVerifier.getId();
+        System.out.println("Champ a verifier : " + textFieldName);
+        fieldAVerifier.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                // Le TextField a perdu le focus
+                System.out.println("Le TextField a perdu le focus.");
+                if (Securite.verifChaineVide(fieldAVerifier.getText(), min, max, accents, 1)) {
+                    valeurChampFormulaireVerif(textFieldName, true);
+                    System.out.println("chaine ok");
+                } else {
+                    Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
+                    System.out.println("probleme dans la chaine");
+                    valeurChampFormulaireVerif(textFieldName, false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Creation de l'observable pour verifier l'email
+     *
+     * @param fieldEmailAVerifier
+     */
+    public void verifTextFieldEmail(TextField fieldEmailAVerifier, Label labelErreur, String MessageErreur) {
+        String textFieldName = fieldEmailAVerifier.getId();
+        System.out.println("Champ a verifier : " + textFieldName);
+        fieldEmailAVerifier.focusedProperty().addListener((observable, oldValue, newValueMail) -> {
+            if (!newValueMail) {
+                if (Securite.validerEmail(fieldEmailAVerifier)) {
+                    valeurChampFormulaireVerif(textFieldName, true);
+                    System.out.println("email ok");
+                } else {
+                    Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
+                    System.out.println("probleme d'email");
+                    valeurChampFormulaireVerif(textFieldName, false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Verifie la validite du premier champ password
+     * et verifie que les deux champs passwords sont égaux
+     */
+    public void verifPaswords(PasswordField fieldAVerifier1, PasswordField fieldAVerifier2, int min, int max, boolean accents, Label labelErreur, String MessageErreur){
+        String textFieldName = fieldAVerifier1.getId();
+        System.out.println("Champ a verifier : " + textFieldName);
+        fieldAVerifier1.focusedProperty().addListener((observable, oldValue, newValuePassword) -> {
+            if (!newValuePassword) {
+                // Le TextField a perdu le focus
+                if (Securite.verifChaineVide(fieldAVerifier1.getText(), min, max, accents, 2)) {
+                    if(Securite.checkChaine(fieldAVerifier1.getText(), fieldAVerifier2.getText())){
+                        valeurChampFormulaireVerif(textFieldName, true);
+                        System.out.println("password ok");
+                    } else {
+                        Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
+                        System.out.println("Les champs ne sont pas identiques");
+                        valeurChampFormulaireVerif(textFieldName, false);
+                    }
+
+                } else {
+                    Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
+                    System.out.println("probleme dans la chaine");
+                    valeurChampFormulaireVerif(textFieldName, false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Permet de renseigner le bon boolean pour la verification des champs
+     *
+     * @param idChamp
+     */
+    public void valeurChampFormulaireVerif(String idChamp, boolean valeur) {
+        switch (idChamp) {
+            case "username":
+                fieldVerifUsername = valeur;
+                break;
+            case "nom":
+                fieldVerifNom = valeur;
+                break;
+            case "prenom":
+                fieldVerifPrenom = valeur;
+                break;
+            case "email":
+                fieldVerifEmail = valeur;
+                break;
+            case "password1":
+                fieldVerifPassword1 = valeur;
+                break;
+            case "password2":
+                fieldVerifPassword2 = valeur;
+                break;
         }
     }
-    public void verifFormulaire(){
-        Securite.verifTextField(fieldUserName, 3, 10, false, labelErreur, "Probleme de username");
-        Securite.verifTextField(fieldNom, 3, 20, false, labelErreur, "Probleme de nom");
-        Securite.verifTextField(fieldprenom, 3, 20, true, labelErreur, "Probleme de prénom");
-    }
+    /**
+     * Creation de l'utilisateur en bdd
+     */
+    public void creerUtilisateur() {
+//        String passwordHashed = BCrypt.hashpw(fielPassword.getText(), BCrypt.gensalt());
+        String passwordHashed = Securite.hashPassword(fielPassword.getText());
 
-    public boolean verifUserName222(){
-        String username = fieldUserName.getText();
-
-        // Serie de tests sur la validité du pseudo : taille, caractères...
-        // renvoi le pseudo modifité (sans espaces...)
-        // permet de recuperer l'erreur
-
-        Resultat resultat = Securite.testTailleChaine(username, 3, 20, true);
-        this.username = resultat.getChaine();
-        // si chaine ok on teste l'existence du pseudo en bdd
-        if (resultat.getValeurBool()) {
-            // teste si le joueur existe en bdd
-            connectionBdd.connect();
-            if (!utilisateursService.existUserName(this.username)) {
-                    // on peut creer le joueur
-                return true;
-            } else {
-                // Le joueur existe on bloque le lancement du jeu
-                this.labelErreur.setText("L'utilisateur existe déja");
-                afficherMessageTemporaire(this.labelErreur, "L'utilisateur existe déja !", 3000);
-            }
-            connectionBdd.close();
-        } else {
-            afficherMessageTemporaire(this.labelErreur, resultat.getChaine(), 3000);
-        }
-        return true;
-    }
-
-
-    public void creerUtilisateur(){
         // recuperation des donnees
         connectionBdd.connect();
-        this.utilisateurs = new Utilisateurs(username, "Maurer", "Delphine", "123", "delcri@free.fr", "1234", 1);
+        this.utilisateurs = new Utilisateurs(fieldUserName.getText(), fieldNom.getText(), fieldprenom.getText(), passwordHashed, fieldEMail.getText(), "1234", 1);
         try {
             utilisateursService.addJoueur(utilisateurs);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         connectionBdd.close();
     }
+
     /**
      * Affichage du message d'erreur pendant un certain laps de temps donnée
      *
@@ -206,8 +300,14 @@ public class LoginController {
      * switch vers l'application => page de paramétrage
      */
     @FXML
-    protected void onInscription(){
-
+    protected void onInscription() {
+        if (fieldVerifUsername && fieldVerifNom && fieldVerifPrenom && fieldVerifEmail &&
+        fieldVerifPassword1 && fieldVerifPassword2) {
+            System.out.println("inscription ok");
+            verifUserNameBdd();
+        } else {
+            System.out.println("probleme");
+        }
     }
 
     /**
@@ -235,28 +335,31 @@ public class LoginController {
      * Affiche le pane d'inscription
      */
     @FXML
-    protected void onSinscrire(){
+    protected void onSinscrire() {
         paneLogin.setVisible(false);
         paneInscription.setVisible(true);
     }
+
     /**
      * Affiche le pane de connexion
      */
     @FXML
-    protected void onSeConnecter(){
+    protected void onSeConnecter() {
         paneLogin.setVisible(true);
         paneInscription.setVisible(false);
     }
+
     /**
      * Quitte l'application
      */
     @FXML
-    protected void onQuit(){
+    protected void onQuit() {
         // Code pour quitter l'application
         Platform.exit();
     }
 
     // evenement après clic bouton
+
     /**
      * Action a executer lors de la fermeture de la fentre avec la croix : sauvegarde
      *

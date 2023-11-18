@@ -18,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 
-import java.sql.SQLException;
 
 public class MainController {
     @FXML

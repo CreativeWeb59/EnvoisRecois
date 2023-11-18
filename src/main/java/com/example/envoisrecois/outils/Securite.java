@@ -1,5 +1,6 @@
 package com.example.envoisrecois.outils;
 
+import com.example.envoisrecois.BCrypt.BCrypt;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -9,10 +10,12 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Securite {
-    public boolean texteVide(TextField champTexte){
+    public boolean texteVide(TextField champTexte) {
         return false;
     }
+
     public static boolean validerEmail(TextField emailTextField) {
         String email = emailTextField.getText().trim();
 
@@ -41,22 +44,29 @@ public class Securite {
         alerte.setContentText(message);
         alerte.showAndWait();
     }
+
     /**
-     * Mise en forme du pseudo :
-     * on enleve tous les espaces
      * nombre mini de caratères : 3
      * nombre maxi de caratères : 20
+     * @param accents : si l'on desire ajouter les accents
+     * @param typeVerification : 1 pour alphabet, 2 pour password
      * Caracteres autorisés : alphabet de a à z + chiffres de 0 à 9
      */
-    public static Resultat testTailleChaine(String chaine, int min, int max, boolean accents) {
+    public static Resultat testTailleChaine(String chaine, int min, int max, boolean accents, int typeVerification) {
         if (chaine.length() > 0) {
-            String chaineATraiter = miseEnFormePseudo(chaine);
-
             // Test taille de la chaine
             Boolean taille = isTailleChaine(chaine, min, max);
+            boolean contenu;
 
-            // Test du contenu de la chaine
-            Boolean contenu = isAlphabet(chaineATraiter, accents);
+            if(typeVerification == 1){
+                // Test du contenu de la chaine
+                contenu = isAlphabet(chaineATraiter, accents);
+            } else if(typeVerification == 2){
+                contenu = isPassword(chaineATraiter);
+            } else {
+                // Test du contenu de la chaine
+                contenu = isAlphabet(chaineATraiter, accents);
+            }
 
             if (taille && contenu) {
                 return new Resultat(chaineATraiter, true);
@@ -106,8 +116,8 @@ public class Securite {
             alphabetList.add(String.valueOf(i));
         }
 
-        if(accents){
-            alphabetList.addAll(List.of("à", "â", "ä", "é", "è", "ê", "ë", "î", "ï", "ô","ö", "ù"));
+        if (accents) {
+            alphabetList.addAll(List.of("à", "â", "ä", "é", "è", "ê", "ë", "î", "ï", "ô", "ö", "ù", "ç"));
         }
         if (premierTest) {
             for (char c : chaine.toCharArray()) {
@@ -121,6 +131,42 @@ public class Securite {
             return false;
         }
     }
+
+    /**
+     * la chaine doit contenir les caractères de l'alphabet en majuscule + minuscule
+     * *
+     *
+     * @param chaine
+     * @return
+     */
+    public static Boolean isPassword(String chaine) {
+        ArrayList<String> alphabetList = new ArrayList<>(List.of(
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+                "v", "w", "x", "y", "z",
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+                "V", "W", "X", "Y", "Z",
+                "à", "â", "ä", "é", "è", "ê", "ë", "î", "ï", "ô", "ö", "ù", "ç",
+                ",", ";", ":", "!", "?", ".", "§",
+                "", "'", "(", "_", ")",
+                "@", "}", "<", ">",
+                "+", "-", "*", "/"
+        ));
+
+        // ajoute les chiffres de 0 à 9
+        for (int i = 0; i < 10; i++) {
+            alphabetList.add(String.valueOf(i));
+        }
+
+        for (char c : chaine.toCharArray()) {
+            String caractere = String.valueOf(c);
+            if (!alphabetList.contains(caractere.toLowerCase())) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
     /**
      * permet de verifer la taille d'une chaine de caractères
      * renvoi false si la taille n'est pas comprise entre les deux valeurs min et max
@@ -136,6 +182,7 @@ public class Securite {
         }
         return false;
     }
+
     /**
      * Affichage du message d'erreur pendant un certain laps de temps donnée
      *
@@ -159,30 +206,55 @@ public class Securite {
         pauseTransition.play(); // Démarrer la temporisation
     }
 
-    public static void verifTextField(TextField fieldAVerifier, int min, int max, boolean accents, Label labelErreur, String MessageErreur){
-        fieldAVerifier.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                // Le TextField a perdu le focus
-                System.out.println("Le TextField a perdu le focus.");
-                if (verifChaineVide(fieldAVerifier.getText(), min, max, accents)) {
-                    System.out.println("chaine ok");
-                } else {
-                    afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
-                    System.out.println("probleme dans la chaine");
-                }
-            }
-        });
-    }
     /**
      * Verifie si une chaine est valide :
      * nb de caractères min et max + lettres de l'alphabet et chiffres seulement autorisés
+     *
      * @param chaineATester
      * @param min
      * @param max
      * @return
      */
-    public static boolean verifChaineVide(String chaineATester, int min, int max, boolean accents){
-        Resultat resultatChaine = Securite.testTailleChaine(chaineATester, min, max, accents);
+    public static boolean verifChaineVide(String chaineATester, int min, int max, boolean accents, int typeVerification) {
+        Resultat resultatChaine = Securite.testTailleChaine(chaineATester, min, max, accents, typeVerification);
         return resultatChaine.getValeurBool();
+    }
+
+    // password
+
+    /**
+     * hash le mot de passe en bCrypt
+     *
+     * @param password
+     * @return
+     */
+    public static String hashPassword(String password) {
+        // Générez un sel (salt) sécurisé
+        String salt = BCrypt.gensalt();
+
+        // Hachez le mot de passe avec le sel
+        return BCrypt.hashpw(password, salt);
+    }
+
+    /**
+     * Vérifie si le mot de passe entré correspond au hachage stocké
+     *
+     * @param candidatePassword
+     * @param hashedPassword
+     * @return
+     */
+    public static boolean checkPassword(String candidatePassword, String hashedPassword) {
+        return BCrypt.checkpw(candidatePassword, hashedPassword);
+    }
+
+    /**
+     * Verifie si deux chaines sont identiques
+     *
+     * @param chaine1
+     * @param chaine2
+     * @return
+     */
+    public static boolean checkChaine(String chaine1, String chaine2) {
+        return chaine1.equals(chaine2);
     }
 }
