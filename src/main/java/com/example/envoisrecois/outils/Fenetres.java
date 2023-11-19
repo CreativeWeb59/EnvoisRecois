@@ -2,7 +2,9 @@ package com.example.envoisrecois.outils;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -151,5 +153,24 @@ public class Fenetres {
     }
     public static void cacherPane(Pane pane){
 
+    }
+
+    /**
+     * Permet de mettre en forme le label erreur
+     * position x / y + couleur et fonte
+     * @param label
+     * @param valeurX
+     * @param valeurY
+     */
+    public static void labelErreur(Label label, double valeurX, double valeurY){
+        // position y
+        label.setLayoutX(valeurX);
+        label.setLayoutY(valeurY);
+        label.setAlignment(Pos.CENTER);
+        // fonte
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        // couleur
+        label.setStyle("-fx-background-color: red;");
+        label.setTextFill(Color.WHITE);
     }
 }

@@ -4,8 +4,10 @@ import com.example.envoisrecois.Main;
 import com.example.envoisrecois.bdd.ConnectionBdd;
 import com.example.envoisrecois.bdd.Utilisateurs;
 import com.example.envoisrecois.bdd.UtilisateursService;
+import com.example.envoisrecois.outils.Fenetres;
+import com.example.envoisrecois.outils.Positionnement;
 import com.example.envoisrecois.outils.Securite;
-import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -29,10 +32,18 @@ public class LoginController {
     private Label labelErreur;
     @FXML
     private Pane paneLogin, paneInscription;
+    // Inscription
     @FXML
     private TextField fieldUserName, fieldNom, fieldEMail, fieldprenom;
     @FXML
     private PasswordField fielPassword, fielPasswordConfirm;
+    // Login
+    @FXML
+    private TextField fieldLoginUsername;
+    @FXML
+    private PasswordField fieldLoginPassword;
+    @FXML
+    private ImageView imageSablier;
 
     // utilise pour le switch de fenetres
     private Stage stage;
@@ -71,8 +82,6 @@ public class LoginController {
             paneInscription.setVisible(true);
         }
 
-        // creation de l'instance utilisateur  vide
-        this.utilisateurs = new Utilisateurs("", "", "", "", "", "", 1);
         // verification des champs du formulaire d'inscription
         // avec observable pour vérifier toute modification
         verifFormulaire();
@@ -109,25 +118,29 @@ public class LoginController {
      * Recupere la valeur des champs du formulaire
      * stocke dans la classe Utilisateurs en mettant en forme les attributs
      */
-    public void creationUtilisateur(){
+    public void creationUtilisateur() {
         String chaine = "";
-        String chaineATraiter = Securite.miseEnFormePseudo(chaine);
+        String chaineATraiter = Securite.miseEnFormeChaine(chaine);
     }
+
     /**
      * Teste si le username existe en dbb
-     * si non le cree
+     * si non le cree et retourne true
+     * sinon retourne false
      */
-    public void verifUserNameBdd() {
+    public boolean verifUserNameBdd() {
         connectionBdd.connect();
         if (!utilisateursService.existUserName(fieldUserName.getText())) {
             // cree le joueur en bdd
             this.creerUtilisateur();
+            return true;
         } else {
             // Le joueur existe on bloque le lancement du jeu
             this.labelErreur.setText("L'utilisateur existe déja");
             afficherMessageTemporaire(this.labelErreur, "L'utilisateur existe déja !", 3000);
         }
         connectionBdd.close();
+        return false;
     }
 
     /**
@@ -139,8 +152,8 @@ public class LoginController {
         verifTextField(fieldNom, 3, 20, false, labelErreur, "Probleme de nom");
         verifTextField(fieldprenom, 3, 20, true, labelErreur, "Probleme de prénom");
         verifTextFieldEmail(fieldEMail, labelErreur, "Email non valide");
-        verifPaswords(fielPassword, fielPasswordConfirm,3, 20, false, labelErreur, "Probleme de mot de passe");
-        verifPaswords(fielPasswordConfirm, fielPassword, 3, 20, false, labelErreur, "Probleme de mot de passe");
+        verifPaswords(fielPassword, fielPasswordConfirm, 6, 20, false, labelErreur, "Probleme de mot de passe");
+        verifPaswords(fielPasswordConfirm, fielPassword, 6, 20, false, labelErreur, "Probleme de mot de passe");
     }
 
     /**
@@ -156,15 +169,15 @@ public class LoginController {
      */
     public void verifTextField(TextField fieldAVerifier, int min, int max, boolean accents, Label labelErreur, String MessageErreur) {
         String textFieldName = fieldAVerifier.getId();
-        System.out.println("Champ a verifier : " + textFieldName);
         fieldAVerifier.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                // Le TextField a perdu le focus
-                System.out.println("Le TextField a perdu le focus.");
+                // formate la chaine pour enlever les espaces
+                fieldAVerifier.setText(Securite.miseEnFormeChaine(fieldAVerifier.getText()));
                 if (Securite.verifChaineVide(fieldAVerifier.getText(), min, max, accents, 1)) {
                     valeurChampFormulaireVerif(textFieldName, true);
                     System.out.println("chaine ok");
                 } else {
+                    Fenetres.labelErreur(labelErreur, 0, 105);
                     Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
                     System.out.println("probleme dans la chaine");
                     valeurChampFormulaireVerif(textFieldName, false);
@@ -180,13 +193,13 @@ public class LoginController {
      */
     public void verifTextFieldEmail(TextField fieldEmailAVerifier, Label labelErreur, String MessageErreur) {
         String textFieldName = fieldEmailAVerifier.getId();
-        System.out.println("Champ a verifier : " + textFieldName);
         fieldEmailAVerifier.focusedProperty().addListener((observable, oldValue, newValueMail) -> {
             if (!newValueMail) {
                 if (Securite.validerEmail(fieldEmailAVerifier)) {
                     valeurChampFormulaireVerif(textFieldName, true);
                     System.out.println("email ok");
                 } else {
+                    Fenetres.labelErreur(labelErreur, 0, 105);
                     Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
                     System.out.println("probleme d'email");
                     valeurChampFormulaireVerif(textFieldName, false);
@@ -199,17 +212,17 @@ public class LoginController {
      * Verifie la validite du premier champ password
      * et verifie que les deux champs passwords sont égaux
      */
-    public void verifPaswords(PasswordField fieldAVerifier1, PasswordField fieldAVerifier2, int min, int max, boolean accents, Label labelErreur, String MessageErreur){
+    public void verifPaswords(PasswordField fieldAVerifier1, PasswordField fieldAVerifier2, int min, int max, boolean accents, Label labelErreur, String MessageErreur) {
         String textFieldName = fieldAVerifier1.getId();
-        System.out.println("Champ a verifier : " + textFieldName);
         fieldAVerifier1.focusedProperty().addListener((observable, oldValue, newValuePassword) -> {
             if (!newValuePassword) {
                 // Le TextField a perdu le focus
                 if (Securite.verifChaineVide(fieldAVerifier1.getText(), min, max, accents, 2)) {
-                    if(Securite.checkChaine(fieldAVerifier1.getText(), fieldAVerifier2.getText())){
+                    if (Securite.checkChaine(fieldAVerifier1.getText(), fieldAVerifier2.getText())) {
                         valeurChampFormulaireVerif(textFieldName, true);
                         System.out.println("password ok");
                     } else {
+                        Fenetres.labelErreur(labelErreur, 0, 105);
                         Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
                         System.out.println("Les champs ne sont pas identiques");
                         valeurChampFormulaireVerif(textFieldName, false);
@@ -251,11 +264,11 @@ public class LoginController {
                 break;
         }
     }
+
     /**
      * Creation de l'utilisateur en bdd
      */
     public void creerUtilisateur() {
-//        String passwordHashed = BCrypt.hashpw(fielPassword.getText(), BCrypt.gensalt());
         String passwordHashed = Securite.hashPassword(fielPassword.getText());
 
         // recuperation des donnees
@@ -300,12 +313,24 @@ public class LoginController {
      * switch vers l'application => page de paramétrage
      */
     @FXML
-    protected void onInscription() {
+    protected void onInscription(Event event) {
         if (fieldVerifUsername && fieldVerifNom && fieldVerifPrenom && fieldVerifEmail &&
-        fieldVerifPassword1 && fieldVerifPassword2) {
+                fielPassword.getText().equals(fielPasswordConfirm.getText())) {
             System.out.println("inscription ok");
-            verifUserNameBdd();
+            if (verifUserNameBdd()) {
+                // demarre l'animation
+                // ouvre l'application de messagerie
+                animateValidApplication(event);
+                // ouvre l'application de messagerie
+//                switchApplication(event);
+            }
         } else {
+            System.out.println("username : " + fieldVerifUsername);
+            System.out.println("nom : " + fieldVerifNom);
+            System.out.println("prenom : " + fieldVerifPrenom);
+            System.out.println("email : " + fieldVerifEmail);
+            System.out.println("password1 : " + fieldVerifPassword1);
+            System.out.println("password2 : " + fieldVerifPassword2);
             System.out.println("probleme");
         }
     }
@@ -338,6 +363,39 @@ public class LoginController {
     protected void onSinscrire() {
         paneLogin.setVisible(false);
         paneInscription.setVisible(true);
+    }
+
+    /**
+     * Bouton de login
+     * verification du username et mot de passe
+     * animation du sablier
+     * ouvre l'application
+     * @param event
+     */
+    @FXML
+    protected void onLogin(Event event){
+        boolean corret = false;
+        // traitement du champ login, suppression espaces...
+        String login = Securite.miseEnFormeChaine(fieldLoginUsername.getText());
+        // traitement du password : espaces + hashage
+        connectionBdd.connect();
+        if(utilisateursService.existUserName(login)){
+            // on recupere le pass hashé
+            System.out.println(fieldLoginUsername.getText());
+            System.out.println(utilisateursService.getPassword(login));
+            if (Securite.checkPassword(fieldLoginPassword.getText(), utilisateursService.getPassword(login))){
+                System.out.println("Mot de passe correct");
+                corret = true;
+            } else {
+                System.out.println("probleme de mot de passe");
+                corret = false;
+            }
+        } else {
+            System.out.println("l'utilisateur n'existe pas dans la base");
+            corret = false;
+        }
+
+        connectionBdd.close();
     }
 
     /**
@@ -381,4 +439,26 @@ public class LoginController {
 //            System.out.println(e);
 //        }
     }
+
+    // animations
+
+    public void animateValidApplication(Event eventFxml) {
+        // centrage image
+        double layoutX = Positionnement.centrerX(imageSablier.getFitWidth(), 800);
+        double layoutY = Positionnement.centrerY(imageSablier.getLayoutY(), 600);
+        imageSablier.setLayoutX(layoutX);
+        imageSablier.setLayoutY(layoutY);
+        imageSablier.setVisible(true);
+
+        final RotateTransition rotateAnimation = new RotateTransition(Duration.seconds(4), imageSablier);
+        rotateAnimation.setCycleCount(TranslateTransition.INDEFINITE);
+        rotateAnimation.setByAngle(360);
+        rotateAnimation.setInterpolator(Interpolator.LINEAR);
+        rotateAnimation.setOnFinished(event -> {
+            switchApplication(eventFxml);
+        });
+        rotateAnimation.setCycleCount(1);
+        rotateAnimation.play();
+    }
+
 }

@@ -60,16 +60,16 @@ public class Securite {
 
             if(typeVerification == 1){
                 // Test du contenu de la chaine
-                contenu = isAlphabet(chaineATraiter, accents);
+                contenu = isAlphabet(chaine, accents);
             } else if(typeVerification == 2){
-                contenu = isPassword(chaineATraiter);
+                contenu = isPassword(chaine);
             } else {
                 // Test du contenu de la chaine
-                contenu = isAlphabet(chaineATraiter, accents);
+                contenu = isAlphabet(chaine, accents);
             }
 
             if (taille && contenu) {
-                return new Resultat(chaineATraiter, true);
+                return new Resultat(chaine, true);
             } else {
                 return new Resultat("La chaine n'est pas valide", false);
             }
@@ -85,14 +85,13 @@ public class Securite {
      * @param chaine
      * @return
      */
-    public static String miseEnFormePseudo(String chaine) {
+    public static String miseEnFormeChaine(String chaine) {
         // tout minuscule
-        chaine = chaine.toLowerCase();
+//        chaine = chaine.toLowerCase();
 
         // enleve les caractères espace, les tabulations et les retours à la ligne
         String chaineTransformee = chaine.replaceAll("\\s", "");
 
-        // enleve les espaces
         return chaineTransformee;
     }
 
@@ -104,6 +103,9 @@ public class Securite {
      * @return
      */
     public static Boolean isAlphabet(String chaine, boolean accents) {
+        // passage tout minuscule
+        chaine = chaine.toLowerCase();
+
         ArrayList<String> alphabetList = new ArrayList<>(List.of(
                 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
                 "v", "w", "x", "y", "z"
@@ -132,6 +134,23 @@ public class Securite {
         }
     }
 
+    /**
+     * Affiche les lettres de a à z
+     * @param args
+     */
+    public static void main(String[] args) {
+        // Code Unicode de la lettre 'a'
+        int codeA = 97;
+
+        // Boucle pour afficher les lettres de 'a' à 'z'
+        for (int i = 0; i < 26; i++) {
+            // Utilisation de la classe char pour afficher la lettre
+            char lettre = (char) (codeA + i);
+
+            // Affichage de la lettre
+            System.out.print(lettre + " ");
+        }
+    }
     /**
      * la chaine doit contenir les caractères de l'alphabet en majuscule + minuscule
      * *

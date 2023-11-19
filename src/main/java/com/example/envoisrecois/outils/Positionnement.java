@@ -1,5 +1,6 @@
 package com.example.envoisrecois.outils;
 
+
 /**
  * permet de positionner les fenetres javafx
  */
@@ -95,4 +96,5 @@ public class Positionnement {
     public static double centrerY(double height, double heightParent){
         return (heightParent/2) - (height/2);
     }
+
 }

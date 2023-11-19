@@ -3,8 +3,6 @@ package com.example.envoisrecois.bdd;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class UtilisateursService {
     private ConnectionBdd connectionBdd;
@@ -70,6 +68,31 @@ public class UtilisateursService {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+    /**
+     * Renvoi le mot de passe appartement au username
+     *
+     * @param username
+     * @return
+     */
+    public String getPassword(String username) {
+
+        String query = "SELECT password FROM utilisateurs WHERE username LIKE ?";
+        try {
+
+            PreparedStatement statement = connectionBdd.prepareStatement(query);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("password");
+            } else {
+                System.out.println("Le username n'existe pas");
+                return "";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
         }
     }
     /**
