@@ -71,15 +71,27 @@ public class ConnectionBdd {
         }
     }
     /**
-     * cree la table parametres
+     * cree la table utilisateurs
      *
      * @throws SQLException
      */
     public void createModelUtilisateurs() throws SQLException {
-        String sql = "CREATE TABLE utilisateurs (id INTEGER PRIMARY KEY, USERNAME TEXT, NOM TEXT, PRENOM TEXT, PASSWORD TEXT, EMAIL TEXT," +
+        String sql = "CREATE TABLE utilisateurs (ID INTEGER PRIMARY KEY, USERNAME TEXT, NOM TEXT, PRENOM TEXT, PASSWORD TEXT, EMAIL TEXT," +
                 "MESSAGERIE INTEGER, PASSWORDM TEXT)";
         Statement stmt = connection.createStatement();
         stmt.execute(sql);
         System.out.println("La table 'utilisateurs' a été créée avec succès.");
+    }
+    /**
+     * cree la table contacts
+     *
+     * @throws SQLException
+     */
+    public void createModelContact() throws SQLException {
+        String sql = "CREATE TABLE contacts (ID INTEGER PRIMARY KEY, NOM TEXT, PRENOM TEXT, EMAIL TEXT, PHOTO TEXT, TELEPHONE TEXT," +
+                "NOTE TEXT, IDUTILISATEUR INTEGER)";
+        Statement stmt = connection.createStatement();
+        stmt.execute(sql);
+        System.out.println("La table 'contacts' a été créée avec succès.");
     }
 }

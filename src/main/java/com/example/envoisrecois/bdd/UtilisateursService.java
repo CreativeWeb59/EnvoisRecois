@@ -12,7 +12,7 @@ public class UtilisateursService {
     }
 
     public void suprUtilisateur(String nom) {
-        String sql = "DELETE FROM sauvegarde WHERE pseudo LIKE ?";
+        String sql = "DELETE FROM utilisateurs WHERE pseudo LIKE ?";
         try {
             PreparedStatement stmt = connectionBdd.prepareStatement(sql);
             stmt.setString(1, nom);

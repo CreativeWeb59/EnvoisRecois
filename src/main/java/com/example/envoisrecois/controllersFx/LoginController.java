@@ -1,9 +1,7 @@
 package com.example.envoisrecois.controllersFx;
 
 import com.example.envoisrecois.Main;
-import com.example.envoisrecois.bdd.ConnectionBdd;
-import com.example.envoisrecois.bdd.Utilisateurs;
-import com.example.envoisrecois.bdd.UtilisateursService;
+import com.example.envoisrecois.bdd.*;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Positionnement;
 import com.example.envoisrecois.outils.Securite;
@@ -25,6 +23,8 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginController {
     // elements FXML
@@ -53,6 +53,7 @@ public class LoginController {
     private ConnectionBdd connectionBdd = new ConnectionBdd();
     private Utilisateurs utilisateurs;
     private UtilisateursService utilisateursService;
+    private ContactsService contactsService;
     // verification du formulaire
     private boolean fieldVerifUsername = false;
     private boolean fieldVerifNom = false;
@@ -85,6 +86,8 @@ public class LoginController {
         // verification des champs du formulaire d'inscription
         // avec observable pour vérifier toute modification
         verifFormulaire();
+
+        listeContacts();
     }
 
     /**
@@ -96,6 +99,9 @@ public class LoginController {
         connectionBdd.connect();
         if (!connectionBdd.isModel("utilisateurs")) {
             connectionBdd.createModelUtilisateurs();
+        }
+        if (!connectionBdd.isModel("contacts")) {
+            connectionBdd.createModelContact();
         }
         connectionBdd.close();
     }
@@ -370,32 +376,19 @@ public class LoginController {
      * verification du username et mot de passe
      * animation du sablier
      * ouvre l'application
+     *
      * @param event
      */
     @FXML
-    protected void onLogin(Event event){
-        boolean corret = false;
-        // traitement du champ login, suppression espaces...
-        String login = Securite.miseEnFormeChaine(fieldLoginUsername.getText());
-        // traitement du password : espaces + hashage
-        connectionBdd.connect();
-        if(utilisateursService.existUserName(login)){
-            // on recupere le pass hashé
-            System.out.println(fieldLoginUsername.getText());
-            System.out.println(utilisateursService.getPassword(login));
-            if (Securite.checkPassword(fieldLoginPassword.getText(), utilisateursService.getPassword(login))){
-                System.out.println("Mot de passe correct");
-                corret = true;
-            } else {
-                System.out.println("probleme de mot de passe");
-                corret = false;
-            }
-        } else {
-            System.out.println("l'utilisateur n'existe pas dans la base");
-            corret = false;
-        }
+    protected void onLogin(Event event) {
+        Fenetres.labelErreur(labelErreur, 0, 105);
+        if (verifLogin()) {
+            // on cree l'instance
 
-        connectionBdd.close();
+            // on ouvre la l'application
+        } else {
+            Securite.afficherMessageTemporaire(labelErreur, "Erreur de username ou de mot de passe", 3000);
+        }
     }
 
     /**
@@ -440,6 +433,30 @@ public class LoginController {
 //        }
     }
 
+    public boolean verifLogin() {
+        boolean corret;
+        // traitement du champ login, suppression espaces...
+        String login = Securite.miseEnFormeChaine(fieldLoginUsername.getText());
+        // traitement du password : espaces + hashage
+        connectionBdd.connect();
+        if(utilisateursService.existUserName(login)){
+            // on recupere le pass hashé
+            System.out.println(fieldLoginUsername.getText());
+            System.out.println(utilisateursService.getPassword(login));
+            if (Securite.checkPassword(fieldLoginPassword.getText(), utilisateursService.getPassword(login))){
+                System.out.println("Mot de passe correct");
+                corret = true;
+            } else {
+                System.out.println("probleme de mot de passe");
+                corret = false;
+            }
+        } else {
+            System.out.println("l'utilisateur n'existe pas dans la base");
+            corret = false;
+        }
+        connectionBdd.close();
+        return corret;
+    }
     // animations
 
     public void animateValidApplication(Event eventFxml) {
@@ -460,5 +477,13 @@ public class LoginController {
         rotateAnimation.setCycleCount(1);
         rotateAnimation.play();
     }
-
+    public void listeContacts(){
+        List<Contacts>listeDesContacts;
+        connectionBdd.connect();
+        contactsService = new ContactsService(connectionBdd);
+        listeDesContacts = contactsService.listeContactsUtilisateur(1);
+        for (Contacts element: listeDesContacts ) {
+            System.out.println("id : " + element.getId() + ", nom :" + element.getNom() + ", prenom : " + element.getPrenom() + ", email : " + element.getEmail());
+        }
+    }
 }
