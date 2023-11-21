@@ -1,6 +1,9 @@
 package com.example.envoisrecois.bdd;
 
+import com.example.envoisrecois.app.Dossiers;
+
 import java.sql.*;
+import java.util.Date;
 
 public class ConnectionBdd {
     private String DBPath = "Chemin aux base de donnée SQLite";
@@ -93,5 +96,26 @@ public class ConnectionBdd {
         Statement stmt = connection.createStatement();
         stmt.execute(sql);
         System.out.println("La table 'contacts' a été créée avec succès.");
+    }
+    /**
+     * cree la table messages
+     *
+     * @throws SQLException
+     */
+    public void createModelMessages() throws SQLException {
+        String sql = "CREATE TABLE messages (ID INTEGER PRIMARY KEY, IDUTILISATEUR INTEGER, EXPEDITEUR TEXT, RECEVEUR TEXT, DATEMESSAGE TEXT," +
+                "OBJET TEXT , SUJET TEXT, CONTENUMESSAGE TEXT, IDDOSSIER INTEGER)";
+        Statement stmt = connection.createStatement();
+        stmt.execute(sql);
+        System.out.println("La table 'messages' a été créée avec succès.");
+    }
+     /**
+     * Cree la table dossiers
+     */
+    public void createModelDossiers() throws SQLException {
+        String sql = "CREATE TABLE dossiers (ID INTEGER PRIMARY KEY, NOM TEXT, REFERENCE TEXT, NOTE TEXT)";
+        Statement stmt = connection.createStatement();
+        stmt.execute(sql);
+        System.out.println("La table 'dossiers' a été créée avec succès.");
     }
 }

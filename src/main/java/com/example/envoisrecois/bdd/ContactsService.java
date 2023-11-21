@@ -1,5 +1,7 @@
 package com.example.envoisrecois.bdd;
 
+import com.example.envoisrecois.app.Contacts;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

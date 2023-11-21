@@ -1,7 +1,8 @@
 package com.example.envoisrecois.controllersFx;
 
-import com.example.envoisrecois.app.Envoyer;
+import com.example.envoisrecois.app.*;
 import com.example.envoisrecois.bdd.ConnectionBdd;
+import com.example.envoisrecois.bdd.ContactsService;
 import com.example.envoisrecois.bdd.UtilisateursService;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Positionnement;
@@ -9,6 +10,8 @@ import com.example.envoisrecois.outils.Securite;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -17,6 +20,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainController {
@@ -25,7 +32,8 @@ public class MainController {
     @FXML
     private Pane paneMenu, paneNouveauMessage,
             paneBoiteReception, paneEnvoyes, paneCorbeille, paneSpam, paneCommercial, paneReseauxSociaux,
-            paneNouveauMessageBtnH, paneNouveauMessageEntete, paneNouveauMessageJoindre;
+            paneNouveauMessageBtnH, paneNouveauMessageEntete, paneNouveauMessageJoindre,
+            paneContacts, paneDetailContact, paneContactBas;
     @FXML
     private SplitPane paneCentralSplit;
     @FXML
@@ -33,7 +41,7 @@ public class MainController {
     @FXML
     private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
     @FXML
-    private VBox vBoxDossiers, vboxNouveauMessage;
+    private VBox vBoxDossiers, vboxNouveauMessage, vboxContacts;
     @FXML
     private HTMLEditor htmlNouveauMessage;
     @FXML
@@ -41,17 +49,41 @@ public class MainController {
 
     // bdd
     private ConnectionBdd connectionBdd = new ConnectionBdd();
+    private Utilisateurs utilisateur;
+    private List<Contacts> listContacts = new ArrayList<>();
     private UtilisateursService utilisateursService;
+    private ContactsService contactsService;
+    private App app= new App();
+
+    // utilise pour le switch de fenetres
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
     /**
      * Methode au chargement du controlleur
+     * recupere l'instance app de l'application
      */
-    public void onLoad(){
+    public void onLoad(App app){
+        // recuperation de l'application
+        this.app = app;
+        // creation des dossiers par defaut
+        creationDossiersDefaut();
+
+        // ajout des contacts existants
+        ajoutContacts();
+
+        // ajout de la liste des messages
+
         // redimensionnement des fenetres de base
         redimFenetres();
         redimElements();
         createDossiers();
         onBoiteReception();
+
+        // affichage de l'écran principal
+        afficheUnPanePrincipal(paneCentralSplit);
+        System.out.println(app);
     }
     /**
      * Redimensionne les fenetres de bases
@@ -62,6 +94,7 @@ public class MainController {
         positionnementPaneDossiers(paneMenu, 2);
         positionnementSplitCentral(paneCentralSplit);
         positionnementPaneDossiers(paneNouveauMessage, 3);
+        positionnementPaneDossiers(paneContacts, 3);
         positionnementScrollPane(paneListeMessages, anchorListeMessages, 2);
         positionnementScrollPane(paneDetailsMessages, anchorDetailsMessages, 3);
     }
@@ -234,14 +267,66 @@ public class MainController {
      * affiche/cree le pane : nouveau message
      */
     public void onNouveauMessage(){
-        paneCentralSplit.setVisible(false);
-        paneNouveauMessage.setVisible(true);
         paneNouveauMessage.setStyle("-fx-background-color: red;");
-    }
-    public void onBoiteReception(){
-        paneNouveauMessage.setVisible(false);
-        paneCentralSplit.setVisible(true);
+        afficheUnPanePrincipal(paneNouveauMessage);
     }
 
+    /**
+     * cache tous les panes principaux sauf celui en parametre
+     */
+    public void afficheUnPanePrincipal(Pane paneAAfficher){
+        paneCentralSplit.setVisible(false);
+        paneNouveauMessage.setVisible(false);
+        paneContacts.setVisible(false);
+        paneAAfficher.setVisible(true);
+        paneAAfficher.setStyle("-fx-background-color: lightblue;");
+    }
+    /**
+     * cache tous les panes principaux sauf celui en parametre qui sera un splitPane
+     */
+    public void afficheUnPanePrincipal(SplitPane paneAAfficher){
+        paneCentralSplit.setVisible(false);
+        paneNouveauMessage.setVisible(false);
+        paneContacts.setVisible(false);
+        paneAAfficher.setVisible(true);
+        paneAAfficher.setStyle("-fx-background-color: lightblue;");
+    }
+    public void onBoiteReception(){
+        afficheUnPanePrincipal(paneCentralSplit);
+    }
+    public void onBtnContacts(){
+        afficheUnPanePrincipal(paneContacts);
+    }
+    /**
+     * Recupere la liste des contacts pour l'utilisateur depuis la bdd
+     * @return
+     */
+    public List<Contacts> listeDesContacts(){
+        List<Contacts> listeDesContacts;
+        connectionBdd.connect();
+        contactsService = new ContactsService(connectionBdd);
+        listeDesContacts = contactsService.listeContactsUtilisateur(app.getUtilisateur().getId());
+        return listeDesContacts;
+    }
+
+    /**
+     * Ajoute la liste de contacts à l'application
+     */
+    public void  ajoutContacts(){
+        listContacts.addAll(listeDesContacts());
+        app.setListeContacts(listContacts);
+    }
+    /**
+     * Crée les dossiers par défaut
+     */
+    public void creationDossiersDefaut(){
+        app.ajouterDossier(AssetSetter.boiteReception());
+        app.ajouterDossier(AssetSetter.envoyes());
+        app.ajouterDossier(AssetSetter.corbeille());
+        app.ajouterDossier(AssetSetter.spams());
+        app.ajouterDossier(AssetSetter.commercial());
+        app.ajouterDossier(AssetSetter.reseauxSociaux());
+        app.ajouterDossier(AssetSetter.brouillons());
+    }
 
 }

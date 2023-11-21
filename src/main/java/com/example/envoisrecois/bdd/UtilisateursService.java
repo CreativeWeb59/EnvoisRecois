@@ -1,5 +1,7 @@
 package com.example.envoisrecois.bdd;
 
+import com.example.envoisrecois.app.Utilisateurs;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -133,4 +135,41 @@ public class UtilisateursService {
             System.out.println("L'utilisateur a été inséré avec succès dans la base de données avec l'ID : " + generatedId);
         }
     }
+    /**
+     * cree l'instance utilisateur par rapport au username donné
+     * @param userName
+     * @return
+     */
+    public Utilisateurs getUtilisateurByNom(String userName) {
+        try {
+            // liste des joueurs
+            String query = "SELECT * FROM utilisateurs WHERE USERNAME = ?";
+            System.out.println(query);
+            PreparedStatement statement = connectionBdd.prepareStatement(query);
+            statement.setString(1, userName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nom = resultSet.getString("nom");
+                String prenom = resultSet.getString("prenom");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                String passwordM = resultSet.getString("passwordM");
+                Utilisateurs utilisateur = new Utilisateurs(userName, nom, prenom, password, email, passwordM, 1);
+                utilisateur.setId(id);
+                return utilisateur;
+            } else {
+                System.out.println("L'utilisateur n'a pas ete trouvé");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Probleme avec l'utilisateur");
+            return null;
+        }
+    }
+
+
+
+
 }

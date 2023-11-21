@@ -1,6 +1,8 @@
 package com.example.envoisrecois.controllersFx;
 
 import com.example.envoisrecois.Main;
+import com.example.envoisrecois.app.App;
+import com.example.envoisrecois.app.Utilisateurs;
 import com.example.envoisrecois.bdd.*;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Positionnement;
@@ -19,12 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginController {
     // elements FXML
@@ -51,9 +49,10 @@ public class LoginController {
     private Parent root;
     // bdd
     private ConnectionBdd connectionBdd = new ConnectionBdd();
-    private Utilisateurs utilisateurs;
+    private Utilisateurs utilisateur;
     private UtilisateursService utilisateursService;
     private ContactsService contactsService;
+    private App app= new App();
     // verification du formulaire
     private boolean fieldVerifUsername = false;
     private boolean fieldVerifNom = false;
@@ -86,8 +85,6 @@ public class LoginController {
         // verification des champs du formulaire d'inscription
         // avec observable pour vérifier toute modification
         verifFormulaire();
-
-        listeContacts();
     }
 
     /**
@@ -102,6 +99,12 @@ public class LoginController {
         }
         if (!connectionBdd.isModel("contacts")) {
             connectionBdd.createModelContact();
+        }
+        if (!connectionBdd.isModel("messages")) {
+            connectionBdd.createModelMessages();
+        }
+        if (!connectionBdd.isModel("dossiers")) {
+            connectionBdd.createModelDossiers();
         }
         connectionBdd.close();
     }
@@ -121,16 +124,7 @@ public class LoginController {
     }
 
     /**
-     * Recupere la valeur des champs du formulaire
-     * stocke dans la classe Utilisateurs en mettant en forme les attributs
-     */
-    public void creationUtilisateur() {
-        String chaine = "";
-        String chaineATraiter = Securite.miseEnFormeChaine(chaine);
-    }
-
-    /**
-     * Teste si le username existe en dbb
+     * Teste si le username existe en bdd
      * si non le cree et retourne true
      * sinon retourne false
      */
@@ -181,7 +175,6 @@ public class LoginController {
                 fieldAVerifier.setText(Securite.miseEnFormeChaine(fieldAVerifier.getText()));
                 if (Securite.verifChaineVide(fieldAVerifier.getText(), min, max, accents, 1)) {
                     valeurChampFormulaireVerif(textFieldName, true);
-                    System.out.println("chaine ok");
                 } else {
                     Fenetres.labelErreur(labelErreur, 0, 105);
                     Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
@@ -203,7 +196,6 @@ public class LoginController {
             if (!newValueMail) {
                 if (Securite.validerEmail(fieldEmailAVerifier)) {
                     valeurChampFormulaireVerif(textFieldName, true);
-                    System.out.println("email ok");
                 } else {
                     Fenetres.labelErreur(labelErreur, 0, 105);
                     Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
@@ -226,7 +218,6 @@ public class LoginController {
                 if (Securite.verifChaineVide(fieldAVerifier1.getText(), min, max, accents, 2)) {
                     if (Securite.checkChaine(fieldAVerifier1.getText(), fieldAVerifier2.getText())) {
                         valeurChampFormulaireVerif(textFieldName, true);
-                        System.out.println("password ok");
                     } else {
                         Fenetres.labelErreur(labelErreur, 0, 105);
                         Securite.afficherMessageTemporaire(labelErreur, MessageErreur, 3000);
@@ -279,9 +270,9 @@ public class LoginController {
 
         // recuperation des donnees
         connectionBdd.connect();
-        this.utilisateurs = new Utilisateurs(fieldUserName.getText(), fieldNom.getText(), fieldprenom.getText(), passwordHashed, fieldEMail.getText(), "1234", 1);
+        this.utilisateur = new Utilisateurs(fieldUserName.getText(), fieldNom.getText(), fieldprenom.getText(), passwordHashed, fieldEMail.getText(), "1234", 1);
         try {
-            utilisateursService.addJoueur(utilisateurs);
+            utilisateursService.addJoueur(utilisateur);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -322,13 +313,12 @@ public class LoginController {
     protected void onInscription(Event event) {
         if (fieldVerifUsername && fieldVerifNom && fieldVerifPrenom && fieldVerifEmail &&
                 fielPassword.getText().equals(fielPasswordConfirm.getText())) {
-            System.out.println("inscription ok");
             if (verifUserNameBdd()) {
+                // ajout de l'utilisateur
+                app.setUtilisateur(utilisateur);
                 // demarre l'animation
                 // ouvre l'application de messagerie
                 animateValidApplication(event);
-                // ouvre l'application de messagerie
-//                switchApplication(event);
             }
         } else {
             System.out.println("username : " + fieldVerifUsername);
@@ -346,12 +336,12 @@ public class LoginController {
      *
      * @param event
      */
-    public void switchApplication(Event event) {
+    public void switchApplication(Event event, App app) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("MainView.fxml"));
             root = loader.load();
             MainController mainController = loader.getController();
-            mainController.onLoad();
+            mainController.onLoad(app);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
@@ -381,12 +371,12 @@ public class LoginController {
      */
     @FXML
     protected void onLogin(Event event) {
-        Fenetres.labelErreur(labelErreur, 0, 105);
         if (verifLogin()) {
             // on cree l'instance
-
-            // on ouvre la l'application
+            creationApplication();
+            animateValidApplication(event);
         } else {
+            Fenetres.labelErreur(labelErreur, 0, 105);
             Securite.afficherMessageTemporaire(labelErreur, "Erreur de username ou de mot de passe", 3000);
         }
     }
@@ -410,29 +400,6 @@ public class LoginController {
     }
 
     // evenement après clic bouton
-
-    /**
-     * Action a executer lors de la fermeture de la fentre avec la croix : sauvegarde
-     *
-     * @param event
-     */
-
-    public void onWindowClose(WindowEvent event) {
-        // fermeture des barres, enregistrement + stop et sauvegarde date deco
-//        fermetureProgress();
-//        // sauvegarde bdd
-//        sauveBdd();
-//
-//        // Sauvegarde de la base de donnees
-//        System.out.println("fermeture fenetre : Sauvegarde");
-//        try {
-//            this.jeu.sauvegardejeu();
-//            this.jeu.sauvegardeCredit();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-    }
-
     public boolean verifLogin() {
         boolean corret;
         // traitement du champ login, suppression espaces...
@@ -440,11 +407,7 @@ public class LoginController {
         // traitement du password : espaces + hashage
         connectionBdd.connect();
         if(utilisateursService.existUserName(login)){
-            // on recupere le pass hashé
-            System.out.println(fieldLoginUsername.getText());
-            System.out.println(utilisateursService.getPassword(login));
             if (Securite.checkPassword(fieldLoginPassword.getText(), utilisateursService.getPassword(login))){
-                System.out.println("Mot de passe correct");
                 corret = true;
             } else {
                 System.out.println("probleme de mot de passe");
@@ -472,18 +435,27 @@ public class LoginController {
         rotateAnimation.setByAngle(360);
         rotateAnimation.setInterpolator(Interpolator.LINEAR);
         rotateAnimation.setOnFinished(event -> {
-            switchApplication(eventFxml);
+            switchApplication(eventFxml, app);
         });
         rotateAnimation.setCycleCount(1);
         rotateAnimation.play();
     }
-    public void listeContacts(){
-        List<Contacts>listeDesContacts;
+    /**
+     * cree l'instance de l'application
+     * ajoute l'utilisateur en login
+     * recupere la liste des messages
+     * recupere la liste des contacts
+     */
+    public void creationApplication(){
+        // ajout de l'utilisateur
+        createUtilisateur();
+        // ajout de l'utilisateur à l'application
+        app.setUtilisateur(utilisateur);
+    }
+    public void createUtilisateur(){
+        String username = Securite.miseEnFormeChaine(fieldLoginUsername.getText());
         connectionBdd.connect();
-        contactsService = new ContactsService(connectionBdd);
-        listeDesContacts = contactsService.listeContactsUtilisateur(1);
-        for (Contacts element: listeDesContacts ) {
-            System.out.println("id : " + element.getId() + ", nom :" + element.getNom() + ", prenom : " + element.getPrenom() + ", email : " + element.getEmail());
-        }
+        utilisateur = utilisateursService.getUtilisateurByNom(username);
+        connectionBdd.close();
     }
 }

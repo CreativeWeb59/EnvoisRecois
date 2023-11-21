@@ -1,4 +1,4 @@
-package com.example.envoisrecois.bdd;
+package com.example.envoisrecois.app;
 
 public class Utilisateurs {
     private int id;
@@ -9,6 +9,7 @@ public class Utilisateurs {
     private String email;
     private String passwordM;
     private int messagerie; // 1 pour free, 2 pour gmail...
+
 
     public Utilisateurs(int id, String userName, String nom, String prenom, String password, String email, String passwordM, int messagerie) {
         this.id = id;
@@ -95,6 +96,17 @@ public class Utilisateurs {
         this.passwordM = passwordM;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Utilisateurs{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", passwordM='" + passwordM + '\'' +
+                ", messagerie=" + messagerie +
+                '}';
+    }
 }

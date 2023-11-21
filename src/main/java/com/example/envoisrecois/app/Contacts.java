@@ -1,4 +1,4 @@
-package com.example.envoisrecois.bdd;
+package com.example.envoisrecois.app;
 
 public class Contacts {
     private int id;
@@ -93,5 +93,19 @@ public class Contacts {
 
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
+    }
+
+    @Override
+    public String toString() {
+        return "Contacts{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                ", photo='" + photo + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", note='" + note + '\'' +
+                ", idUtilisateur=" + idUtilisateur +
+                '}';
     }
 }

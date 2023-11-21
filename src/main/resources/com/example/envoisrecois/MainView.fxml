@@ -67,7 +67,7 @@
             <Button layoutX="2.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Actualiser" />
              <Button layoutX="140.0" layoutY="30.0" mnemonicParsing="false" onAction="#onBoiteReception" prefHeight="60.0" prefWidth="130.0" text="Boîte de réception" wrapText="true" />
             <Button layoutX="280.0" layoutY="30.0" mnemonicParsing="false" onAction="#onNouveauMessage" prefHeight="60.0" prefWidth="130.0" text="Nouveau Message" wrapText="true" />
-             <Button layoutX="420.0" layoutY="30.0" mnemonicParsing="false" onAction="#onHelloButtonClick" prefHeight="60.0" prefWidth="130.0" text="Contacts" />
+             <Button layoutX="420.0" layoutY="30.0" mnemonicParsing="false" onAction="#onBtnContacts" prefHeight="60.0" prefWidth="130.0" text="Contacts" />
              <Button layoutX="560.0" layoutY="30.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="130.0" text="Paramètres" />
              <Button layoutX="700.0" layoutY="30.0" mnemonicParsing="false" onAction="#onQuit" prefHeight="60.0" prefWidth="130.0" text="Quitter" />
          </children>
@@ -125,5 +125,22 @@
                </children>
             </VBox>
          </children></Pane>
+      <Pane fx:id="paneContacts" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <VBox fx:id="vboxContacts" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Pane fx:id="panceContactsBtn" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="50.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Liste des contacts" />
+                        <Button layoutX="300.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Modifier le contact" />
+                        <Button layoutX="550.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Supprimer le contact" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneDetailContact" prefHeight="200.0" prefWidth="200.0" />
+                  <Pane fx:id="paneContactBas" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
       </children>
 </AnchorPane>
