@@ -10,15 +10,15 @@ import com.example.envoisrecois.outils.Securite;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 
@@ -33,7 +33,7 @@ public class MainController {
     private Pane paneMenu, paneNouveauMessage,
             paneBoiteReception, paneEnvoyes, paneCorbeille, paneSpam, paneCommercial, paneReseauxSociaux,
             paneNouveauMessageBtnH, paneNouveauMessageEntete, paneNouveauMessageJoindre,
-            paneContacts, paneDetailContact, paneContactBas;
+            paneContacts, paneDetailContact, paneContactBas, panceContactsBtn, paneListeContact;
     @FXML
     private SplitPane paneCentralSplit;
     @FXML
@@ -41,7 +41,7 @@ public class MainController {
     @FXML
     private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
     @FXML
-    private VBox vBoxDossiers, vboxNouveauMessage, vboxContacts;
+    private VBox vBoxDossiers, vboxNouveauMessage, vboxContacts, vboxListeContacts;
     @FXML
     private HTMLEditor htmlNouveauMessage;
     @FXML
@@ -81,9 +81,14 @@ public class MainController {
         createDossiers();
         onBoiteReception();
 
+        // creation de la liste des contacts
+        CreationElementsContact();
+
         // affichage de l'écran principal
         afficheUnPanePrincipal(paneCentralSplit);
         System.out.println(app);
+
+
     }
     /**
      * Redimensionne les fenetres de bases
@@ -97,6 +102,7 @@ public class MainController {
         positionnementPaneDossiers(paneContacts, 3);
         positionnementScrollPane(paneListeMessages, anchorListeMessages, 2);
         positionnementScrollPane(paneDetailsMessages, anchorDetailsMessages, 3);
+        positionnementContacts();
     }
 
     /**
@@ -167,6 +173,19 @@ public class MainController {
         paneNouveauMessageJoindre.setPrefHeight(vboxNouveauMessage.getPrefHeight()* 0.16);
         paneNouveauMessageJoindre.setStyle("-fx-background-color: lightgreen;");
     }
+    public void positionnementContacts(){
+        // recupere les dimensions du parent contacts
+        vboxContacts.setPrefWidth(paneContacts.getPrefWidth());
+        vboxContacts.setPrefHeight(paneContacts.getPrefHeight());
+        // recupere les dimensions des details messages
+        paneListeContact.setPrefWidth(paneDetailsMessages.getPrefWidth());
+        paneListeContact.setPrefHeight(paneDetailsMessages.getPrefHeight());
+
+        // recupere les dimensions la liste des contacts
+        vboxListeContacts.setPrefWidth(paneListeContact.getPrefWidth());
+        vboxListeContacts.setPrefHeight(paneListeContact.getPrefHeight());
+    }
+
     @FXML
     protected void onHelloButtonClick() {
         String receiver = "delphine.laiglesia@free.fr";
@@ -329,4 +348,114 @@ public class MainController {
         app.ajouterDossier(AssetSetter.brouillons());
     }
 
+    /**
+     * permet de gérer la creation du pane de la liste des contacts
+     */
+    public void CreationElementsContact(){
+        // parcours la liste des contacts et ajoute 1 pane par contact
+        double layoutY = 0;
+        if(app.getListeContacts().size() > 0){
+            for (Contacts contact: app.getListeContacts()) {
+                paneListeContacts(vboxListeContacts, contact.getId(), contact.getNom(), contact.getEmail(), layoutY);
+                layoutY += 60;
+            }
+        } else {
+            paneListeContactVide();
+        }
+
+
+    }
+
+    /**
+     * cree automatique les panes pour chaque contact
+     * @param vBoxParent
+     * @param idContact
+     * @param nom
+     * @param email
+     * @param layoutYPaneprincipal
+     */
+    public void paneListeContacts(VBox vBoxParent, int idContact, String nom, String email, double layoutYPaneprincipal){
+        // mise en fome pane
+        Pane panePrincipal = new Pane();
+        panePrincipal.setPrefWidth(vBoxParent.getPrefWidth());
+        panePrincipal.setPrefHeight(50);
+        panePrincipal.setLayoutY(layoutYPaneprincipal);
+
+        double widthLabel = 250;
+        double widthBouton = 80;
+        double heightElement = 30;
+        double ecart = 20;
+        double layoutX = ecart;
+        double layoutY = 10;
+
+        // creation des labels
+        Label labelNom = Fenetres.createLabel(nom, widthLabel, heightElement, layoutX, layoutY);
+        layoutX += widthLabel + ecart;
+        Label labelEmail = Fenetres.createLabel(email, widthLabel, heightElement, layoutX, layoutY);
+        layoutX += widthLabel + ecart;
+
+        // creation de boutons
+        Button buttonMaj = Fenetres.createButton("Modifier", widthBouton, heightElement, layoutX, layoutY);
+        buttonMaj.setOnAction(event -> {
+            onMajContact(idContact);
+        });
+        layoutX += widthBouton + ecart;
+        Button buttonEcrire = Fenetres.createButton("Ecrire", widthBouton, heightElement, layoutX, layoutY);
+        buttonEcrire.setOnAction(event -> {
+            onEnvoiMessageContact(idContact);
+        });
+        layoutX += widthBouton + ecart;
+        Button buttonSuppr = Fenetres.createButton("Suppr", widthBouton, heightElement, layoutX, layoutY);
+        buttonSuppr.setOnAction(event -> {
+            onSupprContact(idContact);
+        });
+
+        Separator separator = Fenetres.createSeparator(panePrincipal.getPrefWidth()-(ecart*2), 2, ecart, panePrincipal.getPrefHeight()-4);
+
+        // ajout des elements dans le pane
+        panePrincipal.getChildren().addAll(labelNom, labelEmail, buttonMaj, buttonEcrire, buttonSuppr, separator);
+
+        // ajout du pane dans le vbox
+        vBoxParent.setStyle("-fx-background-color: white;");
+        vBoxParent.getChildren().add(panePrincipal);
+    }
+    public void onMajContact(int id){
+        System.out.println("maj le contact " + id);
+    }
+    public void onEnvoiMessageContact(int id){
+        System.out.println("envouie un message au contact " + id);
+    }
+    public void onSupprContact(int id){
+        System.out.println("supprime le contact " + id);
+    }
+    public void paneListeContactVide(){
+        // mise en fome pane
+        Pane panePrincipal = new Pane();
+        panePrincipal.setPrefWidth(vboxListeContacts.getPrefWidth());
+        panePrincipal.setPrefHeight(200);
+        panePrincipal.setLayoutY(0);
+
+        double widthLabel = panePrincipal.getPrefWidth();
+        double widthBouton = 200;
+        double heightElement = 30;
+        double layoutY = 120;
+
+        // creation des labels
+        Label labelNom = Fenetres.createLabel("Vous n'avez aucun contact d'enregistré", widthLabel, heightElement, 0, layoutY);
+        labelNom.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        labelNom.setAlignment(Pos.CENTER);
+
+        // creation de boutons
+        Button buttonMaj = Fenetres.createButton("Créer un contact", widthBouton, heightElement, Positionnement.centrerX(widthBouton, panePrincipal.getPrefWidth()), layoutY + heightElement + 40);
+        buttonMaj.setOnAction(event -> {
+            onMajContact(1);
+        });
+
+        // ajout des elements dans le pane
+        panePrincipal.getChildren().addAll(labelNom, buttonMaj);
+
+        // ajout du pane dans le vbox
+        vboxListeContacts.setStyle("-fx-background-color: white;");
+        vboxListeContacts.getChildren().add(panePrincipal);
+    }
 }

@@ -88,7 +88,7 @@ public class Positionnement {
         return (widthParent/2) - (width/2);
     }
     /**
-     * Permet de donner la position le layoutX pour centrer un element
+     * Permet de donner la position le layoutY pour centrer un element
      * @param height
      * @param heightParent
      * @return layoutY

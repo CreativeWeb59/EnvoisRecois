@@ -430,7 +430,7 @@ public class LoginController {
         imageSablier.setLayoutY(layoutY);
         imageSablier.setVisible(true);
 
-        final RotateTransition rotateAnimation = new RotateTransition(Duration.seconds(4), imageSablier);
+        final RotateTransition rotateAnimation = new RotateTransition(Duration.seconds(1), imageSablier);
         rotateAnimation.setCycleCount(TranslateTransition.INDEFINITE);
         rotateAnimation.setByAngle(360);
         rotateAnimation.setInterpolator(Interpolator.LINEAR);

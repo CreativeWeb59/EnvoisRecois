@@ -2,9 +2,12 @@ package com.example.envoisrecois.outils;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,13 +20,6 @@ import javafx.scene.Cursor;
  * cree les labels, textes et cadres necessaires à l'application
  */
 public class Fenetres {
-    /**
-     * Methode pour creer un label
-     */
-    public static void createLabel(){
-
-    }
-
     /**
      * Methode pour creer un Text
      */
@@ -172,5 +168,57 @@ public class Fenetres {
         // couleur
         label.setStyle("-fx-background-color: red;");
         label.setTextFill(Color.WHITE);
+    }
+
+
+    /**
+     * Creation par defaut d'un label
+     * @param description
+     * @param width
+     * @param height
+     * @param layoutX
+     * @param layoutY
+     * @return
+     */
+    public static Label createLabel(String description, double width, double height, double layoutX, double layoutY){
+        Label label = new Label(description);
+        label.setPrefWidth(width);
+        label.setPrefHeight(height);
+        label.setLayoutX(layoutX);
+        label.setLayoutY(layoutY);
+        label.setPadding(new Insets(5, 10, 5, 10));
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        label.setStyle("-fx-background-color: white;");
+        return label;
+    }
+
+    /**
+     * creation par defaut d'un bouton
+     * @param description
+     * @param width
+     * @param height
+     * @param layoutX
+     * @param layoutY
+     * @return
+     */
+    public static Button createButton(String description, double width, double height, double layoutX, double layoutY){
+        Button button = new Button(description);
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        button.setLayoutX(layoutX);
+        button.setLayoutY(layoutY);
+        button.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        return button;
+    }
+    public static Separator createSeparator(double width, double height, double layoutX, double layoutY){
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.HORIZONTAL);
+        separator.setVisible(true);
+        separator.setStyle("-fx-background-color: black;");
+        separator.setPrefWidth(width);
+        separator.setPrefHeight(height);
+        separator.setLayoutX(layoutX);
+        separator.setLayoutY(layoutY);
+        return separator;
     }
 }
