@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -189,9 +190,59 @@ public class Fenetres {
         label.setPadding(new Insets(5, 10, 5, 10));
         label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         label.setStyle("-fx-background-color: white;");
+        label.setMouseTransparent(false);
         return label;
     }
 
+    /**
+     * Creation automatique d'un Text
+     * @param description
+     * @param width
+     * @param height
+     * @param layoutX
+     * @param layoutY
+     * @return
+     */
+    public static Text createText(String description, double width, double height, double layoutX, double layoutY){
+        Text text = new Text("description");
+        text.setWrappingWidth(width);
+//        text.setprefHeight(height);
+        text.setLayoutX(layoutX);
+        text.setLayoutY(layoutY);
+//        text.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.web("#FF0000")); // Rouge
+        text.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        text.setStyle("-fx-background-color: white;");
+        text.setMouseTransparent(true);
+        return text;
+    }
+
+    /**
+     * Creation automatique d'un textfield
+     * il affichera juste des donnees
+     * le boolean editable permet de rendre non modifable le champs
+     * l'objectif est de rendre sélectionnable le champ
+     * @param leTexte
+     * @param width
+     * @param height
+     * @param layoutX
+     * @param layoutY
+     * @param editable
+     * @return
+     */
+    public static TextField createTextField(String leTexte, double width, double height, double layoutX, double layoutY, boolean editable){
+        TextField textField = new TextField();
+        textField.setText(leTexte);
+        textField.setPrefWidth(width);
+        textField.setPrefHeight(height);
+        textField.setLayoutX(layoutX);
+        textField.setLayoutY(layoutY);
+        textField.setPadding(new Insets(5, 10, 5, 10));
+        textField.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        textField.setStyle("-fx-background-color: white;");
+        textField.setEditable(editable);
+        return textField;
+    }
     /**
      * creation par defaut d'un bouton
      * @param description

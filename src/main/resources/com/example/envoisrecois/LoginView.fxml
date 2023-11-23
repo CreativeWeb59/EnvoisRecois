@@ -23,8 +23,8 @@
                </font>
             </Label>
             <Label layoutX="54.0" layoutY="85.0" text="Login" />
-            <TextField fx:id="fieldLoginUsername" layoutX="50.0" layoutY="110.0" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
-            <PasswordField fx:id="fieldLoginPassword" layoutX="50.0" layoutY="150.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+            <TextField fx:id="fieldLoginUsername" layoutX="50.0" layoutY="110.0" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
+            <PasswordField fx:id="fieldLoginPassword" layoutX="50.0" layoutY="150.0" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
             <Button layoutX="50.0" layoutY="190.0" mnemonicParsing="false" onAction="#onLogin" prefWidth="250.0" text="Se connecter" />
             <Label layoutX="54.0" layoutY="287.0" text="Nouveau membre ?" />
             <Button fx:id="OnInscription" layoutX="65.0" layoutY="314.0" mnemonicParsing="false" onAction="#onSinscrire" text="S'inscrire" />

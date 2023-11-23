@@ -127,23 +127,27 @@
          </children></Pane>
       <Pane fx:id="paneContacts" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <VBox fx:id="vboxContacts" prefHeight="200.0" prefWidth="100.0">
+            <Pane fx:id="paneContactsBtn" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Pane fx:id="panceContactsBtn" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <Button layoutX="50.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Liste des contacts" />
-                        <Button layoutX="300.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Modifier le contact" />
-                        <Button layoutX="800.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Ajouter contact" />
-                        <Button layoutX="550.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onNouveauMessageClick" text="Supprimer le contact" />
-                     </children>
-                  </Pane>
-                  <Pane fx:id="paneListeContact" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <VBox fx:id="vboxListeContacts" prefHeight="200.0" prefWidth="100.0" />
-                     </children></Pane>
-                  <Pane fx:id="paneContactBas" prefHeight="200.0" prefWidth="200.0" />
+                  <Button layoutX="200.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onBtnContacts" text="Liste des contacts" />
+                  <Button layoutX="500.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onBtnAjoutContact" text="Ajouter contact" />
                </children>
-            </VBox>
+            </Pane>
+            <Pane fx:id="paneListeContact" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <VBox fx:id="vboxListeContacts" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="paneDetailContact" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <VBox fx:id="vboxDetailContact" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </Pane>
+             <Pane fx:id="paneAjoutContact" prefHeight="200.0" prefWidth="200.0" visible="false">
+                 <children>
+                     <VBox fx:id="vboxAjoutContact" prefHeight="200.0" prefWidth="100.0" />
+                 </children>
+             </Pane>
          </children>
       </Pane>
       </children>

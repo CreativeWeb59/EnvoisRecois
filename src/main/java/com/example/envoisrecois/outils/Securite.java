@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
-
+import javafx.scene.control.ButtonType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +30,11 @@ public class Securite {
         }
     }
 
+    /**
+     * permet de valider une adresse emain
+     * @param email
+     * @return
+     */
     public static boolean isValidEmail(String email) {
         // Expression régulière pour valider une adresse e-mail simple
         String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
@@ -37,6 +42,11 @@ public class Securite {
         return email.matches(regex);
     }
 
+    /**
+     * Affiche une fenetre d'alerte
+     * @param titre
+     * @param message
+     */
     public static void afficherAlerte(String titre, String message) {
         Alert alerte = new Alert(Alert.AlertType.WARNING);
         alerte.setTitle(titre);
@@ -44,7 +54,26 @@ public class Securite {
         alerte.setContentText(message);
         alerte.showAndWait();
     }
+    public static boolean afficherConfirm(String titre, String message){
+        // Créer une boîte de confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.ERROR);
 
+        confirmationAlert.setTitle(titre);
+        confirmationAlert.setHeaderText(message);
+
+        // Ajouter les boutons OK et Annuler à la boîte de confirmation
+        confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+
+        // Attendre la réponse de l'utilisateur
+        ButtonType userResponse = confirmationAlert.showAndWait().orElse(ButtonType.CANCEL);
+
+        // Vérifier la réponse de l'utilisateur
+        if (userResponse == ButtonType.YES) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /**
      * nombre mini de caratères : 3
      * nombre maxi de caratères : 20
