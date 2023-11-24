@@ -33,7 +33,7 @@ public class MainController {
     private Pane paneMenu, paneNouveauMessage,
             paneBoiteReception, paneEnvoyes, paneCorbeille, paneSpam, paneCommercial, paneReseauxSociaux,
             paneNouveauMessageBtnH, paneNouveauMessageEntete, paneNouveauMessageJoindre,
-            paneContacts, paneContactsBtn, paneListeContact;
+            paneContacts, paneContactsBtn;
     @FXML
     private Pane paneDetailContact, paneAjoutContact;
     @FXML
@@ -41,11 +41,11 @@ public class MainController {
     @FXML
     private SplitPane paneCentralSplit;
     @FXML
-    private ScrollPane paneDossiers, paneListeMessages, paneDetailsMessages;
+    private ScrollPane paneDossiers, paneListeMessages, paneDetailsMessages, paneListeContactScroll;
     @FXML
     private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
     @FXML
-    private VBox vBoxDossiers, vboxNouveauMessage, vboxListeContacts;
+    private VBox vBoxDossiers, vboxNouveauMessage;
     @FXML
     private HTMLEditor htmlNouveauMessage;
     @FXML
@@ -137,6 +137,7 @@ public class MainController {
         splitPane.setLayoutX(caracPaneDossiers[2]);
         splitPane.setLayoutY(caracPaneDossiers[3]);
     }
+
     public void positionnementScrollPane(ScrollPane scrollPane, AnchorPane anchorPane, int position){
         double caracPaneDossiers[] = {200, 200, 20, 60};
         if(position == 1){
@@ -182,9 +183,11 @@ public class MainController {
         paneContactsBtn.setPrefHeight(paneContacts.getPrefHeight()*0.14);
 
         // recupere les dimensions du parent
-        paneListeContact.setPrefWidth(paneContacts.getPrefWidth());
-        paneListeContact.setPrefHeight(paneContacts.getPrefHeight()*0.86);
-        paneListeContact.setLayoutY(paneContacts.getPrefHeight()*0.14);
+        paneListeContactScroll.setPrefWidth(paneContacts.getPrefWidth());
+        paneListeContactScroll.setPrefHeight(paneContacts.getPrefHeight()*0.86);
+        paneListeContactScroll.setLayoutY(paneContacts.getPrefHeight()*0.14);
+        // Définir fitToWidth sur true pour ignorer la largeur de la barre de défilement
+        paneListeContactScroll.setFitToWidth(true);
 
 //        // recupere les dimensions du parent
         paneDetailContact.setPrefWidth(paneContacts.getPrefWidth());
@@ -197,8 +200,8 @@ public class MainController {
         paneAjoutContact.setLayoutY(paneContacts.getPrefHeight()*0.14);
 
         // recupere les dimensions la liste des contacts
-        vboxListeContacts.setPrefWidth(paneListeContact.getPrefWidth());
-        vboxListeContacts.setPrefHeight(paneListeContact.getPrefHeight());
+//        vboxListeContacts.setPrefWidth(paneListeContactScroll.getPrefWidth());
+//        vboxListeContacts.setPrefHeight(paneListeContactScroll.getPrefHeight());
 
         vboxDetailContact.setPrefWidth(paneDetailContact.getPrefWidth());
         vboxDetailContact.setPrefHeight(paneDetailContact.getPrefHeight());
@@ -210,7 +213,7 @@ public class MainController {
         paneContactsBtn.setStyle("-fx-background-color: lightblue;");
 
         // mise en place du padding des vbox
-        vboxListeContacts.setPadding(new Insets(20, 0, 0, 0));
+//        vboxListeContacts.setPadding(new Insets(20, 0, 0, 0));
         vboxDetailContact.setPadding(new Insets(20, 0, 0, 0));
         vboxAjoutContact.setPadding(new Insets(20, 0, 0, 0));
 
@@ -344,7 +347,17 @@ public class MainController {
      * de façon a toujours afficher le bon pane
      */
     public void afficheUnPaneContact(Pane paneAAfficher){
-        paneListeContact.setVisible(false);
+        paneListeContactScroll.setVisible(false);
+        paneDetailContact.setVisible(false);
+        paneAjoutContact.setVisible(false);
+        paneAAfficher.setVisible(true);
+    }
+    /**
+     * cache tous les panes du contact sauf celui en parametre qui sera un splitpane
+     * de façon a toujours afficher le bon pane
+     */
+    public void afficheUnPaneContact(ScrollPane paneAAfficher){
+        paneListeContactScroll.setVisible(false);
         paneDetailContact.setVisible(false);
         paneAjoutContact.setVisible(false);
         paneAAfficher.setVisible(true);
@@ -358,7 +371,7 @@ public class MainController {
      */
     public void onBtnContacts(){
         afficheUnPanePrincipal(paneContacts);
-        afficheUnPaneContact(paneListeContact);
+        afficheUnPaneContact(paneListeContactScroll);
     }
 
     /**
@@ -420,7 +433,7 @@ public class MainController {
         // parcours la liste des contacts et ajoute 1 pane par contact
         if(app.getListeContacts().size() > 0){
             for (Contacts contact: app.getListeContacts()) {
-                paneListeContacts(vboxListeContacts, contact);
+                paneListeContacts(paneListeContactScroll, contact);
             }
         } else {
             paneListeContactVide();
@@ -432,7 +445,7 @@ public class MainController {
      * @param vBoxParent
      * @param contact
      */
-    public void paneListeContacts(VBox vBoxParent, Contacts contact){
+    public void paneListeContacts(ScrollPane vBoxParent, Contacts contact){
         // mise en fome pane
         Pane panePrincipal = new Pane();
         panePrincipal.setPrefWidth(vBoxParent.getPrefWidth());
@@ -516,7 +529,7 @@ public class MainController {
     public void paneListeContactVide(){
         // mise en fome pane
         Pane panePrincipal = new Pane();
-        panePrincipal.setPrefWidth(vboxListeContacts.getPrefWidth());
+//        panePrincipal.setPrefWidth(vboxListeContacts.getPrefWidth());
         panePrincipal.setPrefHeight(200);
         panePrincipal.setLayoutY(0);
 
@@ -541,6 +554,6 @@ public class MainController {
 
         // ajout du pane dans le vbox
 //        vboxListeContacts.setStyle("-fx-background-color: white;");
-        vboxListeContacts.getChildren().add(panePrincipal);
+//        vboxListeContacts.getChildren().add(panePrincipal);
     }
 }

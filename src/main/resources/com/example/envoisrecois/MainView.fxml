@@ -133,11 +133,11 @@
                   <Button layoutX="500.0" layoutY="30.0" minHeight="60.0" minWidth="200.0" mnemonicParsing="false" onAction="#onBtnAjoutContact" text="Ajouter contact" />
                </children>
             </Pane>
-            <Pane fx:id="paneListeContact" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <children>
-                  <VBox fx:id="vboxListeContacts" prefHeight="200.0" prefWidth="100.0" />
-               </children>
-            </Pane>
+            <ScrollPane fx:id="paneListeContactScroll" prefHeight="200.0" prefWidth="200.0" vbarPolicy="NEVER">
+<!--               <content>-->
+<!--                  <VBox fx:id="vboxListeContacts" prefHeight="200.0" prefWidth="100.0" />-->
+<!--               </content>-->
+            </ScrollPane>
             <Pane fx:id="paneDetailContact" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <VBox fx:id="vboxDetailContact" prefHeight="200.0" prefWidth="100.0" />
