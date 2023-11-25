@@ -43,7 +43,7 @@ public class MainController {
     @FXML
     private ScrollPane paneDossiers, paneListeMessages, paneDetailsMessages, paneListeContactScroll;
     @FXML
-    private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
+    private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages, anchorListeContacts;
     @FXML
     private VBox vBoxDossiers, vboxNouveauMessage;
     @FXML
@@ -431,9 +431,11 @@ public class MainController {
      */
     public void CreationElementsContact(){
         // parcours la liste des contacts et ajoute 1 pane par contact
+        double layoutY = 0;
         if(app.getListeContacts().size() > 0){
             for (Contacts contact: app.getListeContacts()) {
-                paneListeContacts(paneListeContactScroll, contact);
+                paneListeContacts(anchorListeContacts, contact, layoutY);
+                layoutY += 60;
             }
         } else {
             paneListeContactVide();
@@ -442,14 +444,15 @@ public class MainController {
 
     /**
      * cree automatique les panes pour chaque contact
-     * @param vBoxParent
+     * @param anchorParent
      * @param contact
      */
-    public void paneListeContacts(ScrollPane vBoxParent, Contacts contact){
+    public void paneListeContacts(AnchorPane anchorParent, Contacts contact, double layoutYPane){
         // mise en fome pane
         Pane panePrincipal = new Pane();
-        panePrincipal.setPrefWidth(vBoxParent.getPrefWidth());
+        panePrincipal.setPrefWidth(anchorParent.getPrefWidth());
         panePrincipal.setPrefHeight(50);
+        panePrincipal.setLayoutY(layoutYPane);
 
         double widthLabel = 250;
         double widthBouton = 80;
@@ -488,7 +491,7 @@ public class MainController {
         panePrincipal.getChildren().addAll(textlNom, textPrenom, textEmail, buttonMaj, buttonEcrire, buttonSuppr, separator);
 
         // ajout du pane dans le vbox
-        vBoxParent.getChildren().add(panePrincipal);
+        anchorParent.getChildren().add(panePrincipal);
     }
     public void onMajContact(VBox vBoxParent, Contacts contact, double layoutYPaneprincipal){
         // affichage du pane des détails contacts
