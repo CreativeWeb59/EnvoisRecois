@@ -15,6 +15,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -22,6 +26,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,10 +190,14 @@ public class MainController {
 
         // recupere les dimensions du parent
         paneListeContactScroll.setPrefWidth(paneContacts.getPrefWidth());
-        paneListeContactScroll.setPrefHeight(paneContacts.getPrefHeight()*0.86);
+//        paneListeContactScroll.setPrefHeight(paneContacts.getPrefHeight()*0.86);
+        paneListeContactScroll.setMinHeight(2000);
+
+        anchorListeContacts.setPrefHeight(2000);
+
         paneListeContactScroll.setLayoutY(paneContacts.getPrefHeight()*0.14);
         // Définir fitToWidth sur true pour ignorer la largeur de la barre de défilement
-        paneListeContactScroll.setFitToWidth(true);
+//        paneListeContactScroll.setFitToWidth(true);
 
 //        // recupere les dimensions du parent
         paneDetailContact.setPrefWidth(paneContacts.getPrefWidth());
@@ -218,6 +228,9 @@ public class MainController {
         vboxAjoutContact.setPadding(new Insets(20, 0, 0, 0));
 
         paneContacts.setStyle("-fx-background-color: white;");
+        paneListeContactScroll.setStyle("-fx-background-color: lightgreen;");
+        anchorListeContacts.setStyle("-fx-background-color: red;");
+
     }
 
     @FXML
@@ -432,14 +445,14 @@ public class MainController {
     public void CreationElementsContact(){
         // parcours la liste des contacts et ajoute 1 pane par contact
         double layoutY = 0;
-        if(app.getListeContacts().size() > 0){
-            for (Contacts contact: app.getListeContacts()) {
-                paneListeContacts(anchorListeContacts, contact, layoutY);
-                layoutY += 60;
-            }
-        } else {
-            paneListeContactVide();
-        }
+//        if(app.getListeContacts().size() > 0){
+//            for (Contacts contact: app.getListeContacts()) {
+//                paneListeContacts(anchorListeContacts, contact, layoutY, Color.yellow);
+//                layoutY += 60;
+//            }
+//        } else {
+//            paneListeContactVide();
+//        }
     }
 
     /**
@@ -447,7 +460,7 @@ public class MainController {
      * @param anchorParent
      * @param contact
      */
-    public void paneListeContacts(AnchorPane anchorParent, Contacts contact, double layoutYPane){
+    public void paneListeContacts(AnchorPane anchorParent, Contacts contact, double layoutYPane, Color couleur){
         // mise en fome pane
         Pane panePrincipal = new Pane();
         panePrincipal.setPrefWidth(anchorParent.getPrefWidth());
@@ -492,6 +505,8 @@ public class MainController {
 
         // ajout du pane dans le vbox
         anchorParent.getChildren().add(panePrincipal);
+        panePrincipal.setStyle("-fx-background-color: grey;");
+        anchorParent.setStyle("-fx-background-color: lightblue;");
     }
     public void onMajContact(VBox vBoxParent, Contacts contact, double layoutYPaneprincipal){
         // affichage du pane des détails contacts
