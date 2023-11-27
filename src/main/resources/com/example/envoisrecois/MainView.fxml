@@ -138,12 +138,8 @@
                   <VBox fx:id="vboxDetailContact" prefHeight="200.0" prefWidth="100.0" />
                </children>
             </Pane>
-            <ScrollPane fx:id="paneListeContactScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-              <content>
-                <AnchorPane fx:id="anchorListeContacts" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-             <Pane fx:id="paneAjoutContact" prefHeight="200.0" prefWidth="200.0" visible="false" >
+            <ScrollPane fx:id="paneListeContactScroll" hbarPolicy="NEVER" prefHeight="392.0" prefWidth="428.0" vbarPolicy="ALWAYS" />
+             <Pane fx:id="paneAjoutContact" prefHeight="200.0" prefWidth="200.0" visible="false">
              <children>
                  <VBox fx:id="vboxAjoutContact" prefHeight="200.0" prefWidth="100.0" />
              </children>

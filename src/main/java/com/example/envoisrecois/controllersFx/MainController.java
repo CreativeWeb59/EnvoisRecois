@@ -49,7 +49,7 @@ public class MainController {
     @FXML
     private ScrollPane paneDossiers, paneListeMessages, paneDetailsMessages, paneListeContactScroll;
     @FXML
-    private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages, anchorListeContacts;
+    private AnchorPane anchorDossiers, anchorListeMessages, anchorDetailsMessages;
     @FXML
     private VBox vBoxDossiers, vboxNouveauMessage;
     @FXML
@@ -193,7 +193,7 @@ public class MainController {
 //        paneListeContactScroll.setPrefHeight(paneContacts.getPrefHeight()*0.86);
         paneListeContactScroll.setMinHeight(2000);
 
-        anchorListeContacts.setPrefHeight(2000);
+
 
         paneListeContactScroll.setLayoutY(paneContacts.getPrefHeight()*0.14);
         // Définir fitToWidth sur true pour ignorer la largeur de la barre de défilement
@@ -229,7 +229,7 @@ public class MainController {
 
         paneContacts.setStyle("-fx-background-color: white;");
         paneListeContactScroll.setStyle("-fx-background-color: lightgreen;");
-        anchorListeContacts.setStyle("-fx-background-color: red;");
+
 
     }
 
@@ -445,14 +445,14 @@ public class MainController {
     public void CreationElementsContact(){
         // parcours la liste des contacts et ajoute 1 pane par contact
         double layoutY = 0;
-//        if(app.getListeContacts().size() > 0){
-//            for (Contacts contact: app.getListeContacts()) {
-//                paneListeContacts(anchorListeContacts, contact, layoutY, Color.yellow);
-//                layoutY += 60;
-//            }
-//        } else {
-//            paneListeContactVide();
-//        }
+        if(app.getListeContacts().size() > 0){
+            for (Contacts contact: app.getListeContacts()) {
+                paneListeContacts(paneListeContactScroll, contact, layoutY, Color.yellow);
+                layoutY += 60;
+            }
+        } else {
+            paneListeContactVide();
+        }
     }
 
     /**
@@ -460,12 +460,11 @@ public class MainController {
      * @param anchorParent
      * @param contact
      */
-    public void paneListeContacts(AnchorPane anchorParent, Contacts contact, double layoutYPane, Color couleur){
+    public void paneListeContacts(ScrollPane anchorParent, Contacts contact, double layoutYPane, Color couleur){
         // mise en fome pane
         Pane panePrincipal = new Pane();
         panePrincipal.setPrefWidth(anchorParent.getPrefWidth());
         panePrincipal.setPrefHeight(50);
-        panePrincipal.setLayoutY(layoutYPane);
 
         double widthLabel = 250;
         double widthBouton = 80;
@@ -502,9 +501,10 @@ public class MainController {
 
         // ajout des elements dans le pane
         panePrincipal.getChildren().addAll(textlNom, textPrenom, textEmail, buttonMaj, buttonEcrire, buttonSuppr, separator);
+        panePrincipal.setLayoutY(layoutYPane);
 
         // ajout du pane dans le vbox
-        anchorParent.getChildren().add(panePrincipal);
+        anchorParent.setContent(panePrincipal);
         panePrincipal.setStyle("-fx-background-color: grey;");
         anchorParent.setStyle("-fx-background-color: lightblue;");
     }
