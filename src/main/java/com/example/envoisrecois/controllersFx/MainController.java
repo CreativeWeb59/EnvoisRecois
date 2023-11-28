@@ -93,7 +93,7 @@ public class MainController {
 
         // creation de la liste des contacts
         positionnementContacts();
-        CreationElementsContact();
+//        CreationElementsContact();
 
         // affichage de l'écran principal
         afficheUnPanePrincipal(paneCentralSplit);
@@ -228,7 +228,7 @@ public class MainController {
         vboxAjoutContact.setPadding(new Insets(20, 0, 0, 0));
 
         paneContacts.setStyle("-fx-background-color: white;");
-        paneListeContactScroll.setStyle("-fx-background-color: lightgreen;");
+//        paneListeContactScroll.setStyle("-fx-background-color: lightgreen;");
 
 
     }
