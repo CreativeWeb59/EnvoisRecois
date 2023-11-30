@@ -456,6 +456,7 @@ public class LoginController {
         String username = Securite.miseEnFormeChaine(fieldLoginUsername.getText());
         connectionBdd.connect();
         utilisateur = utilisateursService.getUtilisateurByNom(username);
-//        connectionBdd.close();
+        connectionBdd.close();
+
     }
 }
