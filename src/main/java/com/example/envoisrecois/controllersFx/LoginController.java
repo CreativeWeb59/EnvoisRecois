@@ -457,6 +457,6 @@ public class LoginController {
         connectionBdd.connect();
         utilisateur = utilisateursService.getUtilisateurByNom(username);
         connectionBdd.close();
-
+// test
     }
 }
