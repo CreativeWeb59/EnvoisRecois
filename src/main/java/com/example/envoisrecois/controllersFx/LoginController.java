@@ -340,8 +340,8 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("MainView.fxml"));
             root = loader.load();
-            MainController mainController = loader.getController();
-            mainController.onLoad(app);
+            MainViewController mainViewController = loader.getController();
+            mainViewController.onLoad(app);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
