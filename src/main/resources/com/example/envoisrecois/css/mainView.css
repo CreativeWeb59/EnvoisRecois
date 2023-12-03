@@ -1,0 +1,12 @@
+.bouton-haut{
+    -fx-pref-width: 150px;
+    -fx-pref-height: 50px;
+    -fx-background-color: #4CAF50; /* Vert */
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-border-color: #45A049; /* Bordure verte plus foncée */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}

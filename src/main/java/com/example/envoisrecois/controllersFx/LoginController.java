@@ -4,6 +4,7 @@ import com.example.envoisrecois.Main;
 import com.example.envoisrecois.app.App;
 import com.example.envoisrecois.app.Utilisateurs;
 import com.example.envoisrecois.bdd.*;
+import com.example.envoisrecois.outils.Environment;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Positionnement;
 import com.example.envoisrecois.outils.Securite;
@@ -85,6 +86,9 @@ public class LoginController {
         // verification des champs du formulaire d'inscription
         // avec observable pour vérifier toute modification
         verifFormulaire();
+
+        System.out.println("Largeur écran : " + Environment.getWidth());
+        System.out.println("Hauteur écran : " + Environment.getHeight());
     }
 
     /**

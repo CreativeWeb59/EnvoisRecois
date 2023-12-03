@@ -3,24 +3,12 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@css/main.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.MainViewController">
+<AnchorPane prefHeight="1000.0" prefWidth="1920.0" stylesheets="@css/mainView.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.MainViewController">
    <children>
-      <BorderPane prefHeight="600.0" prefWidth="800.0">
-         <top>
-            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Label alignment="CENTER" prefHeight="102.0" prefWidth="801.0" text="Haut">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-         </top>
+      <BorderPane prefHeight="1000.0" prefWidth="1920.0">
          <left>
-            <ScrollPane fx:id="scrollListeDossiers" fitToWidth="true" prefHeight="400.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <ScrollPane fx:id="scrollListeDossiers" fitToWidth="true" prefHeight="800.0" prefWidth="400.0" BorderPane.alignment="CENTER">
                <content>
                   <GridPane fx:id="gridListeDossiers" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="200.0" vgap="50.0">
                     <columnConstraints>
@@ -43,11 +31,44 @@
             </ScrollPane>
          </left>
          <center>
-            <ScrollPane prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <ScrollPane prefHeight="900.0" prefWidth="1520.0" style="-fx-background-color: lightblue;" BorderPane.alignment="CENTER">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
               </content>
             </ScrollPane>
-         </center></BorderPane>
+         </center>
+         <top>
+            <VBox prefHeight="200.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+               <children>
+                  <MenuBar>
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="Close" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="Delete" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                  <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <Button mnemonicParsing="false" styleClass="bouton-haut" text="Actualiser" />
+                        <Button mnemonicParsing="false" styleClass="bouton-haut" text="Envoyer" />
+                        <Button mnemonicParsing="false" styleClass="bouton-haut" text="Contacts" />
+                        <Button mnemonicParsing="false" onAction="#onQuit" styleClass="bouton-haut" text="Quitter" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </top></BorderPane>
    </children>
 </AnchorPane>
