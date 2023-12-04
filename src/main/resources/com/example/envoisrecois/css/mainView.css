@@ -9,4 +9,5 @@
     -fx-border-color: #45A049; /* Bordure verte plus foncée */
     -fx-border-width: 2px;
     -fx-border-radius: 5px;
+    -fx-cursor: hand;
 }

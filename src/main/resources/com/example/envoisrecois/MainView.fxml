@@ -30,13 +30,6 @@
                </padding>
             </ScrollPane>
          </left>
-         <center>
-            <ScrollPane prefHeight="900.0" prefWidth="1520.0" style="-fx-background-color: lightblue;" BorderPane.alignment="CENTER">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-         </center>
          <top>
             <VBox prefHeight="200.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
                <children>
@@ -62,13 +55,39 @@
                   <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0" spacing="100.0">
                      <children>
                         <Button mnemonicParsing="false" styleClass="bouton-haut" text="Actualiser" />
-                        <Button mnemonicParsing="false" styleClass="bouton-haut" text="Envoyer" />
-                        <Button mnemonicParsing="false" styleClass="bouton-haut" text="Contacts" />
+                        <Button layoutX="770.0" layoutY="73.0" mnemonicParsing="false" onAction="#onAfficheMessages" styleClass="bouton-haut" text="Messages" />
+                        <Button mnemonicParsing="false" onAction="#onAfficheMessages" styleClass="bouton-haut" text="Ecrire" />
+                        <Button mnemonicParsing="false" onAction="#onAfficheContacts" styleClass="bouton-haut" text="Contacts" />
                         <Button mnemonicParsing="false" onAction="#onQuit" styleClass="bouton-haut" text="Quitter" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-         </top></BorderPane>
+         </top>
+         <center>
+            <Pane BorderPane.alignment="CENTER">
+               <children>
+                  <ScrollPane fx:id="centreContacts" prefHeight="800.0" prefWidth="1520.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                    </content>
+                  </ScrollPane>
+                  <SplitPane fx:id="centreMessages" dividerPositions="0.5" orientation="VERTICAL" prefHeight="800.0" prefWidth="1520.0" style="-fx-background-color: lightblue;" visible="false">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Label layoutX="465.0" layoutY="181.0" text="liste messages" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Label layoutX="507.0" layoutY="82.0" text="detail message" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </Pane>
+         </center></BorderPane>
    </children>
 </AnchorPane>

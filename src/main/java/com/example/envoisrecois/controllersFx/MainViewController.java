@@ -12,9 +12,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -29,7 +31,9 @@ import java.util.ResourceBundle;
 
 public class MainViewController implements Initializable {
     @FXML
-    private ScrollPane scrollListeDossiers;
+    private ScrollPane scrollListeDossiers, centreContacts;
+    @FXML
+    private SplitPane centreMessages;
     @FXML
     private GridPane gridListeDossiers;
     // bdd
@@ -52,6 +56,7 @@ public class MainViewController implements Initializable {
     public void onLoad(App app) {
         // recuperation de l'application
         this.app = app;
+        onAfficheMessages();
     }
 
 
@@ -87,5 +92,21 @@ public class MainViewController implements Initializable {
 //        listeDossiersController.ajoutDossiers();
 
 
+    }
+    public void  afficheCentrePage(Node fenetreCentrale){
+        centreContacts.setVisible(false);
+        centreMessages.setVisible(false);
+
+        fenetreCentrale.setVisible(true);
+        System.out.println("methode complete");
+    }
+
+    public void onAfficheContacts(){
+        System.out.println("methode on affiche Contacts");
+        afficheCentrePage(centreContacts);
+    }
+    public void onAfficheMessages(){
+        System.out.println("methode on affiche Message");
+        afficheCentrePage(centreMessages);
     }
 }
