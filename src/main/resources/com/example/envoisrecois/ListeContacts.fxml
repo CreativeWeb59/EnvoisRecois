@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="hBoxListeContacts" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1300.0" spacing="30.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.ListeContactsController">
+   <children>
+      <TextField fx:id="fieldNom" prefWidth="250.0" promptText="Nom" />
+      <TextField fx:id="fieldPrenom" layoutX="10.0" layoutY="10.0" prefWidth="250.0" promptText="Prénom" />
+      <TextField fx:id="fieldEmail" layoutX="159.0" layoutY="10.0" prefWidth="300.0" promptText="Adresse email" />
+      <Button mnemonicParsing="false" text="Ecrire" />
+      <Button mnemonicParsing="false" text="Modifier" />
+      <Button fx:id="buttonSuppr" layoutX="518.0" layoutY="10.0" mnemonicParsing="false" text="Supprimer" />
+   </children>
+</HBox>

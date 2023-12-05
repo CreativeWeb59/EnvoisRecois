@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="1000.0" prefWidth="1920.0" stylesheets="@css/mainView.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.envoisrecois.controllersFx.MainViewController">
    <children>
-      <BorderPane prefHeight="1000.0" prefWidth="1920.0">
+      <BorderPane prefHeight="1000.0" prefWidth="1920.0" styleClass="border-pane">
          <left>
             <ScrollPane fx:id="scrollListeDossiers" fitToWidth="true" prefHeight="800.0" prefWidth="400.0" BorderPane.alignment="CENTER">
                <content>
@@ -65,29 +65,48 @@
             </VBox>
          </top>
          <center>
-            <Pane BorderPane.alignment="CENTER">
+            <Pane BorderPane.alignment="TOP_CENTER">
                <children>
-                  <ScrollPane fx:id="centreContacts" prefHeight="800.0" prefWidth="1520.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                    </content>
+                  <ScrollPane fx:id="centreContacts" fitToWidth="true" prefHeight="750.0" prefWidth="1520.0">
+                      <content>
+                          <GridPane fx:id="gridListeContacts" alignment="TOP_CENTER" prefHeight="750.0" prefWidth="1320.0">
+                              <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="NEVER" />
+                              </rowConstraints>
+                              <opaqueInsets>
+                                  <Insets />
+                              </opaqueInsets>
+                          </GridPane>
+                      </content>
+                      <BorderPane.margin>
+                          <Insets />
+                      </BorderPane.margin>
+                     <padding>
+                        <Insets top="50.0" />
+                     </padding>
                   </ScrollPane>
                   <SplitPane fx:id="centreMessages" dividerPositions="0.5" orientation="VERTICAL" prefHeight="800.0" prefWidth="1520.0" style="-fx-background-color: lightblue;" visible="false">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
                               <Label layoutX="465.0" layoutY="181.0" text="liste messages" />
+                              <Button mnemonicParsing="false" text="Button" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
                               <Label layoutX="507.0" layoutY="82.0" text="detail message" />
+                              <Button mnemonicParsing="false" text="Button" />
                            </children>
                         </AnchorPane>
                     </items>
                   </SplitPane>
                </children>
             </Pane>
-         </center></BorderPane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

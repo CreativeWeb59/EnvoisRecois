@@ -243,6 +243,26 @@ public class Fenetres {
         textField.setEditable(editable);
         return textField;
     }
+
+    /**
+     * Creation d'un textField dans un HBox (sans layout X, Y qui sont inutiles
+     * @param leTexte
+     * @param width
+     * @param height
+     * @param editable
+     * @return
+     */
+    public static TextField createTextField(String leTexte, double width, double height, boolean editable){
+        TextField textField = new TextField();
+        textField.setText(leTexte);
+        textField.setPrefWidth(width);
+        textField.setPrefHeight(height);
+        textField.setPadding(new Insets(5, 10, 5, 10));
+        textField.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        textField.setStyle("-fx-background-color: white;");
+        textField.setEditable(editable);
+        return textField;
+    }
     /**
      * creation par defaut d'un bouton
      * @param description

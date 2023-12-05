@@ -11,3 +11,15 @@
     -fx-border-radius: 5px;
     -fx-cursor: hand;
 }
+
+/* Désactiver les bords et marges du BorderPane */
+.border-pane {
+    -fx-padding: 0;
+    -fx-border-style: none;
+}
+/* Désactiver les bords et marges de chaque région */
+/*
+.border-pane > * {
+    -fx-border-style: none;
+    -fx-padding: 0;
+}*/

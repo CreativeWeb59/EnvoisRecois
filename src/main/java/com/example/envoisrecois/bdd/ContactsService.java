@@ -57,4 +57,20 @@ public class ContactsService {
         }
         return listeContacts;
     }
+
+    /**
+     * suprrime un contact
+     * @param id
+     */
+    public void suprSauvegarde(int id) {
+        String sql = "DELETE FROM contacts WHERE id LIKE ?";
+        try {
+            PreparedStatement stmt = connectionBdd.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            System.out.println("contact " + id + " supprimé");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
