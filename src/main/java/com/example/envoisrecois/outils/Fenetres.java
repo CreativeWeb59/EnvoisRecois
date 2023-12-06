@@ -281,6 +281,20 @@ public class Fenetres {
         button.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
         return button;
     }
+    /**
+     * creation par defaut d'un bouton sans layout (dans un hbox/vbox par exemple)
+     * @param description
+     * @param width
+     * @param height
+     * @return
+     */
+    public static Button createButton(String description, double width, double height){
+        Button button = new Button(description);
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        button.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        return button;
+    }
     public static Separator createSeparator(double width, double height, double layoutX, double layoutY){
         Separator separator = new Separator();
         separator.setOrientation(Orientation.HORIZONTAL);

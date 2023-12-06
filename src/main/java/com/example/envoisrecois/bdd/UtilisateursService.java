@@ -103,7 +103,7 @@ public class UtilisateursService {
      * @param utilisateurs
      * @throws SQLException
      */
-    public void addJoueur(Utilisateurs utilisateurs) throws SQLException {
+    public void addUtilisateur(Utilisateurs utilisateurs) throws SQLException {
 
         // Insertion des données
         String sql = "INSERT INTO utilisateurs (userName, nom, prenom, password, email, passwordM, messagerie" +

@@ -276,7 +276,7 @@ public class LoginController {
         connectionBdd.connect();
         this.utilisateur = new Utilisateurs(fieldUserName.getText(), fieldNom.getText(), fieldprenom.getText(), passwordHashed, fieldEMail.getText(), "1234", 1);
         try {
-            utilisateursService.addJoueur(utilisateur);
+            utilisateursService.addUtilisateur(utilisateur);
         } catch (Exception e) {
             System.out.println(e);
         }

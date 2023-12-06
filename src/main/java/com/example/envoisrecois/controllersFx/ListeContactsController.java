@@ -67,7 +67,7 @@ public class ListeContactsController {
     public void suppressionContact(int id) {
         try {
             connectionBdd.connect();
-            this.contactsService.suprContact(id);
+//            this.contactsService.suprContact(id);
         } catch (Exception e) {
             System.out.println(e);
         }
