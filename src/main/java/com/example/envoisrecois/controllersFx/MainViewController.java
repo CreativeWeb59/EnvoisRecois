@@ -23,19 +23,22 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.transform.Rotate;
 
 public class MainViewController {
     @FXML
-    private ScrollPane scrollListeDossiers, centreContacts;
+    private ScrollPane scrollListeDossiers;
     @FXML
     private SplitPane centreMessages;
-//    @FXML
+    //    @FXML
 //    private Pane centreNouveauContact;
     @FXML
     private GridPane gridListeDossiers, gridListeContacts;
     @FXML
-    private HBox centreNouveauContact;
+    private HBox centreNouveauContact, listeMessages;
+    @FXML
+    private VBox centreContacts;
     // formulaire ajout contact
     @FXML
     private TextField ajoutNom, ajoutPrenom, ajoutEmail, ajoutTelephone;
@@ -89,7 +92,8 @@ public class MainViewController {
         // Code pour quitter l'application
         Platform.exit();
     }
-    public void initialiseListeDossiers(){
+
+    public void initialiseListeDossiers() {
         HBox contentHBox = null;
         try {
             for (int i = 0; i < 10; i++) {
@@ -104,11 +108,12 @@ public class MainViewController {
             throw new RuntimeException(e);
         }
     }
-    public void initialiseListeContacts(){
+
+    public void initialiseListeContacts() {
         HBox contentHBox = null;
         int i = 0;
         try {
-            for (Contacts contact: app.getListeContacts()) {
+            for (Contacts contact : app.getListeContacts()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("ListeContacts.fxml"));
                 contentHBox = fxmlLoader.load();
                 ListeContactsController listeContactsController = fxmlLoader.getController();
@@ -121,33 +126,44 @@ public class MainViewController {
             throw new RuntimeException(e);
         }
     }
-    public void  afficheCentrePage(Node fenetreCentrale){
+
+    /**
+     * Cache toutes les fenetre principales et affiche uniquement celle demandée
+     * @param fenetreCentrale
+     */
+    public void afficheCentrePage(Node fenetreCentrale) {
+        listeMessages.setVisible(false);
         centreContacts.setVisible(false);
         centreMessages.setVisible(false);
         centreNouveauContact.setVisible(false);
+        listeMessages.setVisible(false);
 
         fenetreCentrale.setVisible(true);
-        System.out.println("methode complete");
+
     }
 
-    public void onAfficheContacts(){
+    public void onAfficheContacts() {
         afficheCentrePage(centreContacts);
     }
-    public void onAfficheMessages(){
-        afficheCentrePage(centreMessages);
+
+    public void onAfficheMessages() {
+        afficheCentrePage(listeMessages);
     }
+
     /**
      * Ajoute la liste de contacts à l'application
      */
-    public void ajoutContacts(){
+    public void ajoutContacts() {
         listContacts.addAll(listeDesContacts());
         app.setListeContacts(listContacts);
     }
+
     /**
      * Recupere la liste des contacts pour l'utilisateur depuis la bdd
+     *
      * @return
      */
-    public List<Contacts> listeDesContacts(){
+    public List<Contacts> listeDesContacts() {
         List<Contacts> listeDesContacts;
         connectionBdd.connect();
         contactsService = new ContactsService(connectionBdd);
@@ -156,11 +172,11 @@ public class MainViewController {
     }
 
     // tests liste des contacts interractive
-    public void creationListeContacts(){
+    public void creationListeContacts() {
         // parcours la liste des contacts et ajoute 1 pane par contact
-        if(app.getListeContacts().size() > 0){
+        if (app.getListeContacts().size() > 0) {
             int position = 0;
-            for (Contacts contact: app.getListeContacts()) {
+            for (Contacts contact : app.getListeContacts()) {
                 dynamicListeContacts(gridListeContacts, contact, position);
                 position++;
             }
@@ -172,11 +188,12 @@ public class MainViewController {
 
     /**
      * cree automatique les panes pour chaque contact
+     *
      * @param gridParent
      * @param contact
-     * @param positionY position dans la grille
+     * @param positionY  position dans la grille
      */
-    public void dynamicListeContacts(GridPane gridParent, Contacts contact, int positionY){
+    public void dynamicListeContacts(GridPane gridParent, Contacts contact, int positionY) {
         // creation du hBox container
         HBox hBox = new HBox();
         hBox.setPrefWidth(gridParent.getPrefWidth());
@@ -196,7 +213,7 @@ public class MainViewController {
 
         // creation des textField
         javafx.scene.control.TextField textlNom = Fenetres.createTextField(contact.getNom(), widthLabel, heightElement, false);
-        javafx.scene.control.TextField textPrenom = Fenetres.createTextField(contact.getPrenom(), widthLabel, heightElement,false);
+        javafx.scene.control.TextField textPrenom = Fenetres.createTextField(contact.getPrenom(), widthLabel, heightElement, false);
         javafx.scene.control.TextField textEmail = Fenetres.createTextField(contact.getEmail(), widthLabel, heightElement, false);
 
         // creation de boutons
@@ -228,19 +245,21 @@ public class MainViewController {
         gridListeContacts.getRowConstraints().add(row);
     }
 
-    public void onMajContact(){
+    public void onMajContact() {
         System.out.println("maj du contact");
     }
-    public void onEnvoiMessageContact(String email){
+
+    public void onEnvoiMessageContact(String email) {
         System.out.println("Envoi message au contact");
     }
+
     /**
      * Suppression du contact
      * avec boite de confirmation
      */
-    public void onBtnSupprContact(Contacts contact, int rowToDelete){
-        boolean question = Securite.afficherConfirm("Suppression contact", "Voulez vous vraiment supprimer le contact\n" + contact.getPrenom() + " " + contact.getNom()  + " ?");
-        if(question){
+    public void onBtnSupprContact(Contacts contact, int rowToDelete) {
+        boolean question = Securite.afficherConfirm("Suppression contact", "Voulez vous vraiment supprimer le contact\n" + contact.getPrenom() + " " + contact.getNom() + " ?");
+        if (question) {
             try {
                 connectionBdd.connect();
                 this.contactsService.suprContact(contact.getId());
@@ -261,14 +280,15 @@ public class MainViewController {
             System.out.println("annulation");
         }
     }
-    public void onNouveauContact(){
+
+    public void onNouveauContact() {
         afficheCentrePage(centreNouveauContact);
     }
 
     /**
      * Ajoute un contact
      */
-    public void onAjoutContact(){
+    public void onAjoutContact() {
         // recuperation des donnéées des textfields
 
         // verification des données du formulaire contact
@@ -298,7 +318,8 @@ public class MainViewController {
             System.out.println(e);
         }
     }
-    public void resetFormNouveauContact(){
+
+    public void resetFormNouveauContact() {
         ajoutNom.setText("");
         ajoutPrenom.setText("");
         ajoutEmail.setText("");
