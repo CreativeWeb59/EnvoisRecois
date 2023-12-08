@@ -1,5 +1,6 @@
 package com.example.envoisrecois.app;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Messages {
@@ -7,31 +8,28 @@ public class Messages {
     private int idUtilisateur;
     private String expediteur;
     private String receveur;
-    private Date dateMessage;
+    private LocalDateTime dateMessage;
     private String objet;
-    private String sujet;
     private String contenuMessage;
     private int idDossier; // id du dossier
 
-    public Messages(int id, int idUtilisateur, String expediteur, String receveur, Date dateMessage, String objet, String sujet, String contenuMessage, int idDossier) {
+    public Messages(int id, int idUtilisateur, String expediteur, String receveur, LocalDateTime dateMessage, String objet, String contenuMessage, int idDossier) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.expediteur = expediteur;
         this.receveur = receveur;
         this.dateMessage = dateMessage;
         this.objet = objet;
-        this.sujet = sujet;
         this.contenuMessage = contenuMessage;
         this.idDossier = idDossier;
     }
 
-    public Messages(int idUtilisateur, String expediteur, String receveur, Date dateMessage, String objet, String sujet, String contenuMessage, int idDossier) {
+    public Messages(int idUtilisateur, String expediteur, String receveur, LocalDateTime dateMessage, String objet, String contenuMessage, int idDossier) {
         this.idUtilisateur = idUtilisateur;
         this.expediteur = expediteur;
         this.receveur = receveur;
         this.dateMessage = dateMessage;
         this.objet = objet;
-        this.sujet = sujet;
         this.contenuMessage = contenuMessage;
         this.idDossier = idDossier;
     }
@@ -60,11 +58,11 @@ public class Messages {
         this.receveur = receveur;
     }
 
-    public Date getDateMessage() {
+    public LocalDateTime getDateMessage() {
         return dateMessage;
     }
 
-    public void setDateMessage(Date dateMessage) {
+    public void setDateMessage(LocalDateTime dateMessage) {
         this.dateMessage = dateMessage;
     }
 
@@ -76,13 +74,6 @@ public class Messages {
         this.objet = objet;
     }
 
-    public String getSujet() {
-        return sujet;
-    }
-
-    public void setSujet(String sujet) {
-        this.sujet = sujet;
-    }
 
     public String getContenuMessage() {
         return contenuMessage;
@@ -116,7 +107,6 @@ public class Messages {
                 ", receveur='" + receveur + '\'' +
                 ", dateMessage=" + dateMessage +
                 ", objet='" + objet + '\'' +
-                ", sujet='" + sujet + '\'' +
                 ", contenuMessage='" + contenuMessage + '\'' +
                 ", idDossier=" + idDossier +
                 '}';

@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -16,6 +17,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.Cursor;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
 /**
  * cree les labels, textes et cadres necessaires à l'application
@@ -256,6 +259,7 @@ public class Fenetres {
         TextField textField = new TextField();
         textField.setText(leTexte);
         textField.setPrefWidth(width);
+        textField.setMaxWidth(width);
         textField.setPrefHeight(height);
         textField.setPadding(new Insets(5, 10, 5, 10));
         textField.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -305,5 +309,20 @@ public class Fenetres {
         separator.setLayoutX(layoutX);
         separator.setLayoutY(layoutY);
         return separator;
+    }
+
+    /**
+     * Animation à l'ouverture d'une fenetre
+     * @param fenetreAmitation
+     */
+    public static void animationOuverture(Node fenetreAmitation) {
+        // creation de l'animation pour ouvrir la fenetre
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), fenetreAmitation);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+
+        // Démarrage de la transition de fondu
+        fenetreAmitation.setVisible(true);
+        fadeIn.play();
     }
 }

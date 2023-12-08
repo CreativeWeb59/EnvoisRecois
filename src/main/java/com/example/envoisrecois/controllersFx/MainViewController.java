@@ -1,11 +1,10 @@
 package com.example.envoisrecois.controllersFx;
 
 import com.example.envoisrecois.Main;
-import com.example.envoisrecois.app.App;
-import com.example.envoisrecois.app.Contacts;
-import com.example.envoisrecois.app.Utilisateurs;
+import com.example.envoisrecois.app.*;
 import com.example.envoisrecois.bdd.ConnectionBdd;
 import com.example.envoisrecois.bdd.ContactsService;
+import com.example.envoisrecois.bdd.MessagesService;
 import com.example.envoisrecois.bdd.UtilisateursService;
 import com.example.envoisrecois.outils.Fenetres;
 import com.example.envoisrecois.outils.Securite;
@@ -18,38 +17,47 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.transform.Rotate;
+
 
 public class MainViewController {
     @FXML
     private ScrollPane scrollListeDossiers;
     @FXML
     private SplitPane centreMessages;
-    //    @FXML
-//    private Pane centreNouveauContact;
     @FXML
-    private GridPane gridListeDossiers, gridListeContacts;
+    private GridPane gridListeDossiers, gridListeContacts, gridListeMessages;
     @FXML
-    private HBox centreNouveauContact, listeMessages;
+    private HBox centreNouveauContact, listeMessages, nouveauMessage;
     @FXML
-    private VBox centreContacts;
+    private VBox centreContacts, vboxListeMessages;
     // formulaire ajout contact
     @FXML
     private TextField ajoutNom, ajoutPrenom, ajoutEmail, ajoutTelephone;
+    // formulaire nouveau message
+    @FXML
+    private TextField nouvDestinataire, nouvObjet;
+    @FXML
+    private HTMLEditor nouvMessage;
+    @FXML
+    private Label nouveauExpediteur;
+
     @FXML
     private TextArea ajoutNote;
     // bdd
     private ConnectionBdd connectionBdd = new ConnectionBdd();
     private Utilisateurs utilisateur;
     private List<Contacts> listContacts = new ArrayList<>();
+    private List<Messages> listMessages = new ArrayList<>();
     private UtilisateursService utilisateursService;
     private ContactsService contactsService;
+    private MessagesService messagesService = new MessagesService(connectionBdd);
     private App app = new App();
 
     // utilise pour le switch de fenetres
@@ -68,6 +76,9 @@ public class MainViewController {
         // récupération des contacts
         ajoutContacts();
 
+        // récupération des messages
+        recupMessages();
+
         // initialisation de la liste des dossiers
         initialiseListeDossiers();
 
@@ -75,10 +86,12 @@ public class MainViewController {
 //        initialiseListeContacts();
         creationListeContacts();
 
+        // initialisation liste des messages
+        creationNodeMessages();
+
         onAfficheMessages();
 
-        Rotate rotate = new Rotate(30, Rotate.Y_AXIS);
-        centreNouveauContact.getTransforms().add(rotate);
+        miseEnPlace();
 
     }
 
@@ -109,6 +122,13 @@ public class MainViewController {
         }
     }
 
+    /**
+     * permet d'ajouter les derniers éléments récupérer de l'application
+     */
+    public void miseEnPlace(){
+        // inscrit le nom de l'expediteur dans les nouveaux messages
+        nouveauExpediteur.setText(app.getUtilisateur().getEmail() + "(" + app.getUtilisateur().getNom() + " " + app.getUtilisateur().getPrenom() + ")");
+    }
     public void initialiseListeContacts() {
         HBox contentHBox = null;
         int i = 0;
@@ -129,17 +149,15 @@ public class MainViewController {
 
     /**
      * Cache toutes les fenetre principales et affiche uniquement celle demandée
-     * @param fenetreCentrale
+     * @param fenetreAOuvrir
      */
-    public void afficheCentrePage(Node fenetreCentrale) {
+    public void afficheCentrePage(Node fenetreAOuvrir) {
         listeMessages.setVisible(false);
         centreContacts.setVisible(false);
-        centreMessages.setVisible(false);
         centreNouveauContact.setVisible(false);
-        listeMessages.setVisible(false);
+        nouveauMessage.setVisible(false);
 
-        fenetreCentrale.setVisible(true);
-
+        Fenetres.animationOuverture(fenetreAOuvrir);
     }
 
     public void onAfficheContacts() {
@@ -148,6 +166,10 @@ public class MainViewController {
 
     public void onAfficheMessages() {
         afficheCentrePage(listeMessages);
+    }
+
+    public void onAfficheNouveauMessage() {
+        afficheCentrePage(nouveauMessage);
     }
 
     /**
@@ -159,6 +181,13 @@ public class MainViewController {
     }
 
     /**
+     * Recupere les messages depuis la bdd
+     */
+    public void recupMessages(){
+        listMessages.addAll(listeDesMessages());
+        app.setListeMessages(listMessages);
+    }
+    /**
      * Recupere la liste des contacts pour l'utilisateur depuis la bdd
      *
      * @return
@@ -168,9 +197,16 @@ public class MainViewController {
         connectionBdd.connect();
         contactsService = new ContactsService(connectionBdd);
         listeDesContacts = contactsService.listeContactsUtilisateur(app.getUtilisateur().getId());
+        connectionBdd.close();
         return listeDesContacts;
     }
-
+    public List<Messages> listeDesMessages() {
+        List<Messages> listeDesMessages;
+        connectionBdd.connect();
+        listeDesMessages = messagesService.listeMessagesUtilisateur(app.getUtilisateur().getId());
+        connectionBdd.close();
+        return listeDesMessages;
+    }
     // tests liste des contacts interractive
     public void creationListeContacts() {
         // parcours la liste des contacts et ajoute 1 pane par contact
@@ -178,6 +214,19 @@ public class MainViewController {
             int position = 0;
             for (Contacts contact : app.getListeContacts()) {
                 dynamicListeContacts(gridListeContacts, contact, position);
+                position++;
+            }
+        } else {
+            System.out.println("Pas de contacts");
+        }
+        System.out.println("Creation de la liste des contacts");
+    }
+    public void creationNodeMessages(){
+        // parcours la liste des contacts et ajoute 1 pane par contact
+        if (app.getListeMessages().size() > 0) {
+            int position = 0;
+            for (Messages message : app.getListeMessages()) {
+                dynamicListeMessages(gridListeMessages, message, position);
                 position++;
             }
         } else {
@@ -241,10 +290,52 @@ public class MainViewController {
 //        }
 
         // ajout du hbox dans le gridpane
-        gridListeContacts.add(hBox, 0, positionY);
-        gridListeContacts.getRowConstraints().add(row);
+        gridParent.add(hBox, 0, positionY);
+        gridParent.getRowConstraints().add(row);
     }
 
+    /**
+     * Rempli automatiquement le grid pour la liste des messages
+     * @param gridParent
+     * @param message
+     * @param positionY  position dans la grille
+     */
+    public static void dynamicListeMessages(GridPane gridParent, Messages message, int positionY){
+        // creation du hBox container
+        HBox hBox = new HBox();
+        hBox.setPrefWidth(gridParent.getPrefWidth());
+        hBox.setMinWidth(gridParent.getPrefWidth());
+        hBox.setPrefHeight(50);
+        hBox.setSpacing(0);
+        hBox.setAlignment(Pos.CENTER);
+
+        // gestion de la hauteur des lignes
+        RowConstraints row = new RowConstraints();
+        row.setMinHeight(40);
+        row.setPrefHeight(40);
+        row.setMaxHeight(40);
+
+        double heightElement = 30;
+
+        // taille : 820, 500, 200
+        // creation des textField
+        TextField textObjet = Fenetres.createTextField(message.getObjet(), 820, heightElement, false);
+        TextField textExpediteur = Fenetres.createTextField(message.getExpediteur(), 500, heightElement, false);
+        TextField textDateMessage = Fenetres.createTextField(message.getDateMessage().toString(), 200, heightElement, false);
+
+        // ajout des elements dans le hbox
+        hBox.getChildren().addAll(textObjet, textExpediteur, textDateMessage);
+
+//        if(positionY %2 == 0){
+//            hBox.setStyle("-fx-background-color: lightgreen;");
+//        } else {
+//            hBox.setStyle("-fx-background-color: lightblue;");
+//        }
+
+        // ajout du hbox dans le gridpane
+        gridParent.add(hBox, 0, positionY);
+        gridParent.getRowConstraints().add(row);
+    }
     public void onMajContact() {
         System.out.println("maj du contact");
     }
@@ -319,11 +410,60 @@ public class MainViewController {
         }
     }
 
+    /**
+     * Envoie le message
+     */
+    public void onEnvoyerMessage(){
+        // recuperation des textfields
+        String receiver = this.nouvDestinataire.getText();
+        String objet = this.nouvObjet.getText();
+        String corpsHtml = this.nouvMessage.getHtmlText();
+        LocalDateTime dateEncours = LocalDateTime.now();
+
+        // creation d'un nouveau message dans l'app
+        Messages nouveauMessage = new Messages(app.getUtilisateur().getId(), app.getUtilisateur().getEmail(), receiver, dateEncours, objet, corpsHtml, 1);
+        
+
+
+        // ecriture du message dans la bdd
+        try {
+            connectionBdd.connect();
+            this.messagesService.addMessage(nouveauMessage);
+
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        // envoi de l'email
+//        if(Securite.validerEmail(nouvDestinataire)){
+//            Envoyer.envoyerMessage(receiver, objet, corpsHtml);
+//        } else {
+//            System.out.println("Erreur de destinataire");
+//        }
+
+        // reset des champs
+        resetFormNouveauMessage();
+        // renvoie vers la boite de reception
+        afficheCentrePage(listeMessages);
+    }
+
+    /**
+     * remet à zéro les champs du formulaire nouveau contact
+     */
     public void resetFormNouveauContact() {
         ajoutNom.setText("");
         ajoutPrenom.setText("");
         ajoutEmail.setText("");
         ajoutTelephone.setText("");
         ajoutNote.setText("");
+    }
+    /**
+     * remet à zéro les champs du formulaire nouveau message
+     */
+    public void resetFormNouveauMessage() {
+        nouvDestinataire.setText("");
+        nouvObjet.setText("");
+        nouvMessage.setHtmlText("");
     }
 }

@@ -104,7 +104,7 @@ public class ConnectionBdd {
      */
     public void createModelMessages() throws SQLException {
         String sql = "CREATE TABLE messages (ID INTEGER PRIMARY KEY, IDUTILISATEUR INTEGER, EXPEDITEUR TEXT, RECEVEUR TEXT, DATEMESSAGE TEXT," +
-                "OBJET TEXT , SUJET TEXT, CONTENUMESSAGE TEXT, IDDOSSIER INTEGER)";
+                "OBJET TEXT , CONTENUMESSAGE TEXT, IDDOSSIER INTEGER)";
         Statement stmt = connection.createStatement();
         stmt.execute(sql);
         System.out.println("La table 'messages' a été créée avec succès.");
