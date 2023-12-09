@@ -53,6 +53,17 @@ public class App {
     public void ajouterDossier(Dossiers dossier) {
         listeDossiers.add(dossier);
     }
+    /**
+     * Creation des dossiers par defaut
+     */
+    public void setupDossiers(){
+        Dossiers dossier0 = new Dossiers(1, "Boîte de réception", "INBOX", "Boite de reception");
+        Dossiers dossier1 = new Dossiers(2, "Envoyés", "Sent", "Messages envoyés");
+        Dossiers dossier2 = new Dossiers(3, "Spam", "Spams", "Spams");
+        Dossiers dossier3 = new Dossiers(4, "Corbeille", "Trash", "Corbeille");
+        Dossiers dossier4 = new Dossiers(5, "Commercial", "Commercial", "Messages commerciaux");
+        Dossiers dossier5 = new Dossiers(6, "RéseauxSociaux", "ReseauxSociaux", "Réseaux sociaux");
+    }
     @Override
     public String toString() {
         return "App{" +

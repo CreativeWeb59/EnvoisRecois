@@ -60,19 +60,19 @@
                               <Insets bottom="50.0" top="50.0" />
                            </padding>
                         </ScrollPane>
-                        <SplitPane fx:id="centreMessages" dividerPositions="0.5" orientation="VERTICAL" prefHeight="800.0" prefWidth="1520.0">
+                        <SplitPane fx:id="splitListeMessages" dividerPositions="0.5" orientation="VERTICAL" prefHeight="800.0" prefWidth="1520.0">
                           <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="1520.0">
+                              <VBox fx:id="vboxListeMessages" prefHeight="400.0" prefWidth="1520.0">
                                  <children>
-                                    <VBox fx:id="vboxListeMessages" prefHeight="400.0" prefWidth="1520.0">
+                                    <HBox alignment="TOP_CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: lightgrey;">
                                        <children>
-                                          <HBox alignment="TOP_CENTER" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: lightgrey;">
-                                             <children>
-                                                <Label prefWidth="820.0" text="Objet :" />
-                                                <Label prefWidth="500.0" text="De :" />
-                                                <Label prefWidth="200.0" text="Date :" />
-                                             </children>
-                                          </HBox>
+                                          <Label prefWidth="820.0" text="Objet :" />
+                                          <Label prefWidth="500.0" text="De :" />
+                                          <Label prefWidth="200.0" text="Date :" />
+                                       </children>
+                                    </HBox>
+                                    <ScrollPane fitToWidth="true" prefHeight="760.0" prefWidth="1520.0">
+                                       <content>
                                           <GridPane fx:id="gridListeMessages" prefWidth="1520.0">
                                             <columnConstraints>
                                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="820.0" />
@@ -83,10 +83,10 @@
                                               <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                           </GridPane>
-                                       </children>
-                                    </VBox>
+                                       </content>
+                                    </ScrollPane>
                                  </children>
-                              </AnchorPane>
+                              </VBox>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="1520.0">
                                  <children>
                                     <VBox prefHeight="400.0" prefWidth="1520.0" />

@@ -30,7 +30,7 @@ public class MainViewController {
     @FXML
     private ScrollPane scrollListeDossiers;
     @FXML
-    private SplitPane centreMessages;
+    private SplitPane splitListeMessages;
     @FXML
     private GridPane gridListeDossiers, gridListeContacts, gridListeMessages;
     @FXML
@@ -55,6 +55,7 @@ public class MainViewController {
     private Utilisateurs utilisateur;
     private List<Contacts> listContacts = new ArrayList<>();
     private List<Messages> listMessages = new ArrayList<>();
+    private List<Dossiers> listDossiers = new ArrayList<>();
     private UtilisateursService utilisateursService;
     private ContactsService contactsService;
     private MessagesService messagesService = new MessagesService(connectionBdd);
@@ -76,8 +77,11 @@ public class MainViewController {
         // récupération des contacts
         ajoutContacts();
 
-        // récupération des messages
-        recupMessages();
+        // récupération des messages depuis la bdd
+//        recupMessages();
+
+        // rempli la liste de messages depuis la messagerie
+        app.setListeMessages(Recevoir.recoisMessages());
 
         // initialisation de la liste des dossiers
         initialiseListeDossiers();
@@ -92,6 +96,9 @@ public class MainViewController {
         onAfficheMessages();
 
         miseEnPlace();
+
+        System.out.println("Liste des messages : ");
+        System.out.println(app.getListeMessages().size());
 
     }
 
@@ -128,6 +135,13 @@ public class MainViewController {
     public void miseEnPlace(){
         // inscrit le nom de l'expediteur dans les nouveaux messages
         nouveauExpediteur.setText(app.getUtilisateur().getEmail() + "(" + app.getUtilisateur().getNom() + " " + app.getUtilisateur().getPrenom() + ")");
+    }
+
+    /**
+     * Creation des dossiers de la boite de reception
+     */
+    public void createDossiers(){
+
     }
     public void initialiseListeContacts() {
         HBox contentHBox = null;
@@ -320,7 +334,7 @@ public class MainViewController {
         // taille : 820, 500, 200
         // creation des textField
         TextField textObjet = Fenetres.createTextField(message.getObjet(), 820, heightElement, false);
-        TextField textExpediteur = Fenetres.createTextField(message.getExpediteur(), 500, heightElement, false);
+        TextField textExpediteur = Fenetres.createTextField(message.getReceveur(), 500, heightElement, false);
         TextField textDateMessage = Fenetres.createTextField(message.getDateMessage().toString(), 200, heightElement, false);
 
         // ajout des elements dans le hbox
@@ -466,4 +480,5 @@ public class MainViewController {
         nouvObjet.setText("");
         nouvMessage.setHtmlText("");
     }
+
 }
