@@ -234,28 +234,13 @@ public class MainController {
     }
 
     @FXML
-    protected void onHelloButtonClick() {
-        String receiver = "delphine.laiglesia@free.fr";
-        String subject = "Message de moi";
-        String contenuMessage = "Salut c'est pas moi\nPour le deuxième message !!!";
-
-        // Corps de l'e-mail au format HTML
-        String corpsHtml = "<p>Ceci est un <strong>test</strong> d'e-mail au format HTML.</p>"
-                + "<p>Vous pouvez mettre du texte <em>en italique</em>, changer les <span style='color:blue;'>couleurs</span>, etc.</p>";
-
-
-        System.out.println("Envoi du message");
-        Envoyer.envoyerMessage(receiver, subject, corpsHtml);
-
-    }
-    @FXML
     protected void onNouveauMessageClick(){
         String receiver = this.fieldSend.getText();
         String subject = this.fieldSujet.getText();
         String corpsHtml = this.htmlNouveauMessage.getHtmlText();
 
         if(Securite.validerEmail(fieldSend)){
-        Envoyer.envoyerMessage(receiver, subject, corpsHtml);
+        Envoyer.envoyerMessage(receiver, subject, corpsHtml, app.getUtilisateur().getEmail(), app.getPasswordMessagrie());
         } else {
             System.out.println("Erreur de destinataire");
         }

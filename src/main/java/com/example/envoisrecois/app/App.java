@@ -8,15 +8,17 @@ public class App {
     private List<Messages>listeMessages = new ArrayList<>();
     private List<Contacts> listeContacts = new ArrayList<>();
     private List<Dossiers> listeDossiers = new ArrayList<>();
+    private String passwordMessagrie;
 
     public App() {
     }
 
-    public App(Utilisateurs utilisateur, List<Messages> listeMessages, List<Contacts> listeContacts, List<Dossiers> listeDossiers) {
+    public App(Utilisateurs utilisateur, List<Messages> listeMessages, List<Contacts> listeContacts, List<Dossiers> listeDossiers, String passwordMessagrie) {
         this.utilisateur = utilisateur;
         this.listeMessages = listeMessages;
         this.listeContacts = listeContacts;
         this.listeDossiers = listeDossiers;
+        this.passwordMessagrie = passwordMessagrie;
     }
 
     public Utilisateurs getUtilisateur() {
@@ -53,6 +55,15 @@ public class App {
     public void ajouterDossier(Dossiers dossier) {
         listeDossiers.add(dossier);
     }
+
+    public String getPasswordMessagrie() {
+        return passwordMessagrie;
+    }
+
+    public void setPasswordMessagrie(String passwordMessagrie) {
+        this.passwordMessagrie = passwordMessagrie;
+    }
+
     /**
      * Creation des dossiers par defaut
      */

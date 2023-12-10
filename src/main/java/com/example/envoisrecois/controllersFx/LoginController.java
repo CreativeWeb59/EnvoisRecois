@@ -35,7 +35,7 @@ public class LoginController {
     @FXML
     private TextField fieldUserName, fieldNom, fieldEMail, fieldprenom;
     @FXML
-    private PasswordField fielPassword, fielPasswordConfirm;
+    private PasswordField fieldPassword, fieldPasswordConfirm, fieldLoginPasswordMessagerie;
     // Login
     @FXML
     private TextField fieldLoginUsername;
@@ -156,8 +156,8 @@ public class LoginController {
         verifTextField(fieldNom, 3, 20, false, labelErreur, "Probleme de nom");
         verifTextField(fieldprenom, 3, 20, true, labelErreur, "Probleme de prénom");
         verifTextFieldEmail(fieldEMail, labelErreur, "Email non valide");
-        verifPaswords(fielPassword, fielPasswordConfirm, 6, 20, false, labelErreur, "Probleme de mot de passe");
-        verifPaswords(fielPasswordConfirm, fielPassword, 6, 20, false, labelErreur, "Probleme de mot de passe");
+        verifPaswords(fieldPassword, fieldPasswordConfirm, 6, 20, false, labelErreur, "Probleme de mot de passe");
+        verifPaswords(fieldPasswordConfirm, fieldPassword, 6, 20, false, labelErreur, "Probleme de mot de passe");
     }
 
     /**
@@ -270,7 +270,7 @@ public class LoginController {
      * Creation de l'utilisateur en bdd
      */
     public void creerUtilisateur() {
-        String passwordHashed = Securite.hashPassword(fielPassword.getText());
+        String passwordHashed = Securite.hashPassword(fieldPassword.getText());
 
         // recuperation des donnees
         connectionBdd.connect();
@@ -316,7 +316,7 @@ public class LoginController {
     @FXML
     protected void onInscription(Event event) {
         if (fieldVerifUsername && fieldVerifNom && fieldVerifPrenom && fieldVerifEmail &&
-                fielPassword.getText().equals(fielPasswordConfirm.getText())) {
+                fieldPassword.getText().equals(fieldPasswordConfirm.getText())) {
             if (verifUserNameBdd()) {
                 // ajout de l'utilisateur
                 app.setUtilisateur(utilisateur);
@@ -451,10 +451,14 @@ public class LoginController {
      * recupere la liste des contacts
      */
     public void creationApplication(){
+        // recuperation password messagerie
+        String passwordMessagerie =  fieldLoginPasswordMessagerie.getText();
         // ajout de l'utilisateur
         createUtilisateur();
         // ajout de l'utilisateur à l'application
         app.setUtilisateur(utilisateur);
+        // ajout du mot de passe messagerie
+        app.setPasswordMessagrie(passwordMessagerie);
     }
     public void createUtilisateur(){
         String username = Securite.miseEnFormeChaine(fieldLoginUsername.getText());

@@ -17,15 +17,19 @@
          </children></Pane>
       <Pane fx:id="paneLogin" layoutX="450.0" layoutY="140.0" prefHeight="460.0" prefWidth="350.0" style="-fx-background-color: lightblue;">
          <children>
-            <Label layoutX="113.0" layoutY="22.0" text="Se connecter">
-               <font>
-                  <Font size="26.0" />
-               </font>
-            </Label>
-            <Label layoutX="54.0" layoutY="85.0" text="Login" />
-            <TextField fx:id="fieldLoginUsername" layoutX="50.0" layoutY="110.0" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
-            <PasswordField fx:id="fieldLoginPassword" layoutX="50.0" layoutY="150.0" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
-            <Button layoutX="50.0" layoutY="190.0" mnemonicParsing="false" onAction="#onLogin" prefWidth="250.0" text="Se connecter" />
+            <VBox layoutX="45.0" layoutY="30.0" prefHeight="250.0" prefWidth="260.0" spacing="18.0">
+               <children>
+                  <Label alignment="CENTER" prefWidth="260.0" text="Se connecter">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="fieldLoginUsername" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
+                  <PasswordField fx:id="fieldLoginPassword" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+                  <PasswordField fx:id="fieldLoginPasswordMessagerie" onAction="#onLogin" prefHeight="30.0" prefWidth="250.0" promptText="Password messagerie" />
+                  <Button mnemonicParsing="false" onAction="#onLogin" prefWidth="250.0" text="Se connecter" />
+               </children>
+            </VBox>
             <Label layoutX="54.0" layoutY="287.0" text="Nouveau membre ?" />
             <Button fx:id="OnInscription" layoutX="65.0" layoutY="314.0" mnemonicParsing="false" onAction="#onSinscrire" text="S'inscrire" />
             <Button fx:id="OnPasswordPerdu" layoutX="175.0" layoutY="314.0" mnemonicParsing="false" text="Mot de passe perdu" />
@@ -48,8 +52,8 @@
             <TextField id="nom" fx:id="fieldNom" layoutX="86.0" layoutY="100.0" prefHeight="30.0" prefWidth="250.0" promptText="Nom" />
             <TextField id="prenom" fx:id="fieldprenom" layoutX="86.0" layoutY="140.0" prefHeight="30.0" prefWidth="250.0" promptText="Prénom" />
             <TextField id="email" fx:id="fieldEMail" layoutX="86.0" layoutY="182.0" prefHeight="30.0" prefWidth="250.0" promptText="Adresse email" />
-            <PasswordField id="password1" fx:id="fielPassword" layoutX="86.0" layoutY="228.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
-            <PasswordField id="password2" fx:id="fielPasswordConfirm" layoutX="86.0" layoutY="262.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+            <PasswordField id="password1" fx:id="fieldPassword" layoutX="86.0" layoutY="228.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+            <PasswordField id="password2" fx:id="fieldPasswordConfirm" layoutX="86.0" layoutY="262.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
             <Button layoutX="86.0" layoutY="300.0" mnemonicParsing="false" onAction="#onInscription" prefHeight="30.0" prefWidth="250.0" text="S'inscrire" />
             <Button layoutX="199.0" layoutY="351.0" mnemonicParsing="false" onAction="#onSeConnecter" text="Se connecter" />
             <Label layoutX="62.0" layoutY="355.0" text="Déjà inscrit ?" />

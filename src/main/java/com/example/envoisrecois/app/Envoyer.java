@@ -12,18 +12,25 @@ import java.util.Properties;
  * Permet d'envoyer les messages
  */
 public class Envoyer {
-    public static void envoyerMessage(String receiver, String subject, String contenuMessage) {
+    public static void envoyerMessage(String receiver, String subject, String contenuMessage, String userEmail, String password) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.free.fr");
         props.put("mail.smtp.port", "587");
 
+        // Création de la session
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(RecupConfig.getUserEmail(), RecupConfig.getPassword());
+                return new PasswordAuthentication(userEmail, password);
             }
         });
+
+//        Session session = Session.getInstance(props, new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication(RecupConfig.getUserEmail(), RecupConfig.getPassword());
+//            }
+//        });
 
         try {
             Message message = new MimeMessage(session);

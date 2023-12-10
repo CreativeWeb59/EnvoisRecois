@@ -81,7 +81,7 @@ public class MainViewController {
 //        recupMessages();
 
         // rempli la liste de messages depuis la messagerie
-        app.setListeMessages(Recevoir.recoisMessages());
+//        app.setListeMessages(Recevoir.recoisMessages());
 
         // initialisation de la liste des dossiers
         initialiseListeDossiers();
@@ -436,8 +436,6 @@ public class MainViewController {
 
         // creation d'un nouveau message dans l'app
         Messages nouveauMessage = new Messages(app.getUtilisateur().getId(), app.getUtilisateur().getEmail(), receiver, dateEncours, objet, corpsHtml, 1);
-        
-
 
         // ecriture du message dans la bdd
         try {
