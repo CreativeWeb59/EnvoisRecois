@@ -441,18 +441,16 @@ public class MainViewController {
         try {
             connectionBdd.connect();
             this.messagesService.addMessage(nouveauMessage);
-
-
         } catch (Exception e) {
             System.out.println(e);
         }
 
         // envoi de l'email
-//        if(Securite.validerEmail(nouvDestinataire)){
-//            Envoyer.envoyerMessage(receiver, objet, corpsHtml);
-//        } else {
-//            System.out.println("Erreur de destinataire");
-//        }
+        if(Securite.validerEmail(nouvDestinataire)){
+            Envoyer.envoyerMessage(receiver, objet, corpsHtml, app.getUtilisateur().getEmail(), app.getPasswordMessagrie());
+        } else {
+            System.out.println("Erreur de destinataire");
+        }
 
         // reset des champs
         resetFormNouveauMessage();

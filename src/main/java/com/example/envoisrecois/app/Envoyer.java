@@ -34,7 +34,8 @@ public class Envoyer {
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(RecupConfig.getUserEmail()));
+//            message.setFrom(new InternetAddress(RecupConfig.getUserEmail()));
+            message.setFrom(new InternetAddress(userEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
             message.setSubject(subject);
 //            message.setText(contenuMessage);
