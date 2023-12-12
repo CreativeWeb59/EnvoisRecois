@@ -46,6 +46,8 @@ public class Envoyer {
             Transport.send(message);
 
             System.out.println("E-mail envoyé avec succès!");
+        } catch (AuthenticationFailedException authentification){
+            System.out.println("probleme d'authentification");
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

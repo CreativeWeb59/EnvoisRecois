@@ -35,7 +35,7 @@ public class LoginController {
     @FXML
     private TextField fieldUserName, fieldNom, fieldEMail, fieldprenom;
     @FXML
-    private PasswordField fieldPassword, fieldPasswordConfirm, fieldLoginPasswordMessagerie;
+    private PasswordField fieldPassword, fieldPasswordConfirm, fieldLoginPasswordMessagerie, fieldPasswordMessagerie;
     // Login
     @FXML
     private TextField fieldLoginUsername;
@@ -320,6 +320,7 @@ public class LoginController {
             if (verifUserNameBdd()) {
                 // ajout de l'utilisateur
                 app.setUtilisateur(utilisateur);
+                app.setPasswordMessagrie(fieldPasswordMessagerie.getText()); // ajout du mot de passe de la messagerie
                 // demarre l'animation
                 // ouvre l'application de messagerie
                 animateValidApplication(event);
@@ -465,6 +466,5 @@ public class LoginController {
         connectionBdd.connect();
         utilisateur = utilisateursService.getUtilisateurByNom(username);
         connectionBdd.close();
-// test
     }
 }
