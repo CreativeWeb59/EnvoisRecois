@@ -38,7 +38,7 @@ public class Envoyer {
             message.setFrom(new InternetAddress(userEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
             message.setSubject(subject);
-            message.setText(contenuMessage);
+//            message.setText(contenuMessage);
 
             // Utilisation de setContent avec le type "text/html" pour spécifier un e-mail au format HTML
             message.setContent(contenuMessage, "text/html; charset=utf-8");
