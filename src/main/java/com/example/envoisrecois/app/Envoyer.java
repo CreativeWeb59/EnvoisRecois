@@ -33,6 +33,10 @@ public class Envoyer {
 //        });
 
         try {
+            // recuperation des répertoires
+            // recuperation des messages
+
+
             Message message = new MimeMessage(session);
 //            message.setFrom(new InternetAddress(RecupConfig.getUserEmail()));
             message.setFrom(new InternetAddress(userEmail));
