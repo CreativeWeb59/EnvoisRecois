@@ -12,7 +12,7 @@ import java.util.Properties;
  * Permet d'envoyer les messages
  */
 public class Envoyer {
-    public static envoyerMessage(String receiver, String subject, String contenuMessage, String userEmail, String password) {
+    public static void envoyerMessage(String receiver, String subject, String contenuMessage, String userEmail, String password) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
