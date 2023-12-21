@@ -26,15 +26,15 @@ public class Envoyer {
             }
         });
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(RecupConfig.getUserEmail(), RecupConfig.getPassword());
-            }
-        });
+//        Session session = Session.getInstance(props, new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication(RecupConfig.getUserEmail(), RecupConfig.getPassword());
+//            }
+//        });
 
         try {
-            // recuperation des répertoires
-            // recuperation des messages
+             recuperation des répertoires
+             recuperation des messages
 
 
             Message message = new MimeMessage(session);
